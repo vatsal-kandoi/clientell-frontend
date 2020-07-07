@@ -15,12 +15,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     display: flex; flex-direction: column; -ms-flex-direction: column;
 }
 
-a{
-    text-decoration: none; outline: none;
-}
-a:active {
-    text-decoration: none; outline: none;
-}
+a{text-decoration: none; outline: none;}
+a:active {text-decoration: none; outline: none;}
 
 /** Error 40%  white overlay **/
 /** Elevattion table
