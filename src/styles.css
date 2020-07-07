@@ -1,20 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
-root {
+* {
     --primary: #00BCD4;
     --surface: #121212;
     --text-base: #000000;
     --text-alt: #FFFFFF;
+    --primary-text: #673ab7;
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+* {box-sizing: border-box;}
 
-.row {
-    display: flex; flex-direction: row; -ms-flex-direction: row;
-}
-.column {
-    display: flex; flex-direction: column; -ms-flex-direction: column;
-}
-
+.row { display: flex; flex-direction: row; -ms-flex-direction: row; }
+.column { display: flex; flex-direction: column; -ms-flex-direction: column; }
+.container{ width: 100%; height: 100vh; }
 a{text-decoration: none; outline: none;}
 a:active {text-decoration: none; outline: none;}
 

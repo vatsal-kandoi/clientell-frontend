@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class UrlService {
-
+  baseUrl = `http://localhost:3000/api`;
+  signupUrl = `${this.baseUrl}/auth/signup`;
+  loginUrl = `${this.baseUrl}/auth/login`;
   constructor() { }
 }

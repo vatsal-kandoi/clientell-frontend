@@ -1,1 +1,25 @@
-<p>sign-in works!</p>
+<div class="container background">
+    <div class="container column form">
+        <div>
+            <h2>Sign into your account</h2>
+        </div>
+        <div class="form-enc">
+            <form [formGroup]="signinForm">
+                <div>
+                    <input placeholder="you@email.com" type="email" formControlName="email" required>
+                </div>
+                <div>
+                    <input placeholder="Password" type="password" formControlName="password" required>
+                </div>
+                <div>
+                    <button (click)="login()" mat-flat-button color="primary">Login</button>
+                </div>
+            </form>
+        </div>
+        <div class="signup-margin">
+            Don't have an account?
+            <a [routerLink]="['/auth/signup']" class="signup-color">Sign up here</a>
+        </div>
+    </div>
+                
+</div>

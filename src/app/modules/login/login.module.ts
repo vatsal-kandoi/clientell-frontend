@@ -4,21 +4,24 @@ import { SignInComponent } from './pages/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { LoginRoutingModule } from './login.routing';
 
-import {CookieService} from './_services/cookie.service';
-import {LoginService} from './_services/login.service';
-import {TokenInterceptor} from './_interceptors/token.interceptor';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+
 
 
 @NgModule({
   declarations: [SignInComponent, SignUpComponent],
   imports: [
     CommonModule,
-    LoginRoutingModule
+    LoginRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,   
+    MatInputModule,
+    MatButtonModule
   ],
   exports: [
-    CookieService,
-    LoginService,
-    TokenInterceptor
   ]
 })
 export class LoginModule { }

@@ -1,1 +1,28 @@
-<p>sign-up works!</p>
+<div class="container background">
+    <div class="container column form">
+        <div>
+            <h2>Create your Clientell account</h2>
+        </div>
+        <div class="form-enc">
+            <form [formGroup]="signupForm">
+                <div>
+                    <input placeholder="John Doe" type="text" formControlName="name" required>
+                </div>
+                <div>
+                    <input placeholder="you@email.com" type="email" formControlName="email" required>
+                </div>
+                <div>
+                    <input placeholder="Password" type="password" formControlName="password" required>
+                </div>
+                <div>
+                    <button (click)="signup()" mat-flat-button color="primary">Signup</button>
+                </div>
+            </form>
+        </div>
+        <div class="signin-margin">
+            Already have an account?
+            <a [routerLink]="['/auth/login']" class="signin-color">Sign in here</a>
+        </div>
+    </div>
+                
+</div>
