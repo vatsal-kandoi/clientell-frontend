@@ -8,6 +8,11 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { LoginService } from './_services/login.service';
+import { TokenService } from './_services/token.service';
+import { TokenInterceptor } from './_interceptors/token.interceptor';
 
 
 
@@ -19,9 +24,7 @@ import {MatButtonModule} from '@angular/material/button';
     ReactiveFormsModule,
     FormsModule,   
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
   ],
-  exports: [
-  ]
 })
 export class LoginModule { }

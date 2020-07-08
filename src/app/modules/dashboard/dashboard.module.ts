@@ -23,7 +23,11 @@ import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import { AddProjectMobileComponent } from './components/add-project/add-project-mobile/add-project-mobile.component';
 import { AddProjectDesktopComponent } from './components/add-project/add-project-desktop/add-project-desktop.component';
 import {MatInputModule} from '@angular/material/input';
-
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import {TokenInterceptor} from '../login/_interceptors/token.interceptor';
+import { BrowserModule } from '@angular/platform-browser';
+import { LoginService } from '../login/_services/login.service';
+import { TokenService } from '../login/_services/token.service';
 
 
 @NgModule({
@@ -39,6 +43,8 @@ import {MatInputModule} from '@angular/material/input';
     MatBottomSheetModule,
     ReactiveFormsModule,
     FormsModule
+  ],
+  providers: [
   ]
 })
 export class DashboardModule { }

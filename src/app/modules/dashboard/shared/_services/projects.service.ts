@@ -1,79 +1,52 @@
-import { Injectable } from '@angular/core';
+import { Injectable, SkipSelf } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from 'src/app/shared/_services/url.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
+  projectAdded: Subject<boolean>;
+  projectFetched: Subject<boolean>;
   activeProject: Subject<string>;
   activeProjectID: string;
-  projects = [
-    {
-      name: 'Lorem Ipsum',
-      _id: 'nina3nifn',
-      letter: 'L',
-      active: false,
-    },
-    {
-      name: 'Lorem Ipsum',
-      _id: 'nina3nifn',
-      letter: 'L',
-      active: true,
-    },
-    {
-      name: 'Lorem Ipsum',
-      _id: 'nina3nifn',
-      letter: 'L',
-      active: true,
-    },
-    {
-      name: 'Lorem Ipsum',
-      _id: 'nina3nifn',
-      letter: 'L',
-      active: true,
-    },
-    {
-      name: 'Lorem Ipsum',
-      _id: 'nina3nifn',
-      letter: 'L',
-      active: true,
-    },
-    {
-      name: 'Lorem Ipsum',
-      _id: 'nina3nifn',
-      letter: 'L',
-      active: true,
-    },
-    {
-      name: 'Lorem Ipsum',
-      _id: 'nina3nifn',
-      letter: 'L',
-      active: true,
-    },
-    {
-      name: 'Aorem Ipsum',
-      _id: 'nina3nifn',
-      letter: 'A',
-      active: true,
-    }
-  ];
-  constructor() {
+  projects: any[];
+
+  constructor(private http: HttpClient, private url: UrlService) {
+    this.projectAdded = new Subject();
     this.activeProject = new Subject();
+    this.projectFetched = new Subject();
   }
+
   setActiveProject(id: string) {
     this.activeProjectID = id;
     this.activeProject.next(this.activeProjectID);
   }
   addProject(name: string) {
-    this.projects.push(    {
-      name,
-      _id: 'nina3nifn',
-      letter: name[0],
-      active: true,
+    this.http.post(this.url.addProjectUrl, {'name': name}).subscribe((val: any) => {
+      if (val.code == 200) {
+        this.projects.push({
+          name: name,
+          letter: name[0],
+          _id: val.id
+        });
+        this.projectAdded.next(true);
+      }
     });
   }
-  getAllProjects() {
-    return of(this.projects);
+
+  fetchAllProjects() {
+    return this.http.get(this.url.allProjectsUrl).subscribe((val: any) => {
+      if (val.code == 200) {
+        this.projects = [];
+        val.projects.forEach(element => {
+          this.projects.push({...element, letter: element.name[0]});
+        });
+        this.projectFetched.next(true);
+      }
+    });
+
   }
 }

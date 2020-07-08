@@ -24,10 +24,28 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.projectsService.getAllProjects().subscribe((val) => {
-      this.projects = val;
+    if (this.projectsService.projects == undefined) this.projectsService.fetchAllProjects();
+    else {
+      this.projects = this.projectsService.projects;
       this.projectsToShow = JSON.parse(JSON.stringify(this.projects)).splice(0,5);
       this.showProject = true;
+    }
+
+    this.projectsService.projectFetched.subscribe((val) => {
+      if (val == true) {
+        this.projects = this.projectsService.projects;
+        this.projectsToShow = JSON.parse(JSON.stringify(this.projects)).splice(0,5);
+        this.showProject = true;
+      }
+    });
+
+    this.projectsService.projectAdded.subscribe((val) => {
+      if (val == true) {
+        this.projects = this.projectsService.projects;
+        this.projectsToShow = JSON.parse(JSON.stringify(this.projects)).splice(0,5);
+      } else {
+
+      }
     });
   }
 

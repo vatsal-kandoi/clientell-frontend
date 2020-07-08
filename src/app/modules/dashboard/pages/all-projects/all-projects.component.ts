@@ -18,9 +18,25 @@ export class AllProjectsComponent implements OnInit {
   constructor(private projectsService: ProjectsService, private router: Router, private bottomSheet: MatBottomSheet ,private displaySize: DisplaySizeService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.projectsService.getAllProjects().subscribe((val) => {
-      this.projects = val;
+    if (this.projectsService.projects == undefined) this.projectsService.fetchAllProjects();
+    else {
+      this.projects = this.projectsService.projects;
+    }
+
+    this.projectsService.projectFetched.subscribe((val) => {
+      if (val == true) {
+        this.projects = this.projectsService.projects;
+      }
     });
+
+    this.projectsService.projectAdded.subscribe((val) => {
+      if (val == true) {
+        this.projects = this.projectsService.projects;
+      } else {
+
+      }
+    });
+
   }
   openProject(id: string) {
     this.projectsService.setActiveProject(id);

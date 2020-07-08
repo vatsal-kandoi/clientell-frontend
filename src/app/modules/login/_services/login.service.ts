@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {UrlService} from '../../../shared/_services/url.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+import {TokenService} from './token.service';
 import {AuthFetchedResponse} from '../../../shared/_interfaces/auth-response.interface';
 
 @Injectable({
@@ -11,13 +12,26 @@ import {AuthFetchedResponse} from '../../../shared/_interfaces/auth-response.int
 })
 export class LoginService {
   error: Subject<string>;
-  constructor(private url: UrlService, private http: HttpClient, private router: Router) {
+  cachedRequests: Array<HttpRequest<any>> = [];
+
+  
+  constructor(private url: UrlService, private http: HttpClient, private router: Router, private token: TokenService) {
     this.error = new Subject();
+  }
+
+  public collectFailedRequest(request): void {
+    this.cachedRequests.push(request);
+  }
+
+  public retryFailedRequests(): void {
+    // retry the requests. this method can
+    // be called after the token is refreshed
   }
 
   signup(name, email, password) {
     this.http.post(this.url.signupUrl, {name: name, email: email, password: password}).subscribe((data: AuthFetchedResponse) => {
       if (data.success == true) {
+        this.token.setTokens(data.access_token, data.refresh_token);
         this.router.navigate(['/dashboard']);
       } else {
         console.log(data);
@@ -31,6 +45,7 @@ export class LoginService {
   login(email, password) {
     this.http.post(this.url.loginUrl, {email, password}).subscribe((data: AuthFetchedResponse) => {
       if (data.success == true) {
+        this.token.setTokens(data.access_token, data.refresh_token);
         this.router.navigate(['/dashboard']);
       } else {
         console.log(data);
@@ -40,5 +55,9 @@ export class LoginService {
         }, 4000);
       }
     });
+  }
+  logout() {
+    this.token.deleteTokens();
+    this.router.navigate(['/auth/login']);
   }
 }
