@@ -1,0 +1,16 @@
+<h3>Add to agenda</h3>
+<div>
+    <mat-radio-group aria-label="Select an option">
+    <mat-radio-button value="1">Option 1</mat-radio-button>
+    <mat-radio-button value="2">Option 2</mat-radio-button>
+    </mat-radio-group>
+<div>
+    <mat-form-field color="accent" class="example-full-width">
+        <mat-label>Description</mat-label>
+        <input [formControl]="value" matInput placeholder="Ex. Project Pizza">
+    </mat-form-field>
+</div>
+<div>
+    <button mat-button color="accent" (click)="add()">Create project</button>
+</div>
+<div class="error">{{error}}</div>

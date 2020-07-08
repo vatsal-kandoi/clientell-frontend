@@ -1,0 +1,23 @@
+.space-between {
+    justify-content: space-between; align-items: center;
+}
+.user {
+    width: 40px; height: 40px; border-radius: 50%; 
+    border-style: dotted; border-width: 2px; border-color: rgba(255,255,255,0.4);
+    margin-left: 5px;
+
+    font-size: 1.2rem; color: rgba(255,255,255,0.4);
+    display: flex;justify-content: center; align-items: center;
+}
+.font{
+    font-size: 1.5rem;
+}
+.access{
+    margin-left: 10px; padding: 5px 15px; background-color: rgba(255,255,255,0.07); border-radius: 10px;
+}
+.center{
+    align-items: center;
+}
+.margin-top{
+    margin-top: 25px;
+}

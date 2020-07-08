@@ -1,0 +1,20 @@
+.space-between {
+    justify-content: space-between; align-items: center;
+}
+
+li{
+    list-style: none;
+    text-decoration: none;
+}
+ul {
+    list-style: none;
+    text-decoration: none;
+}
+.feats{
+    padding: 0px 20px;
+    margin-bottom: 10px;
+}
+.status{
+    padding: 5px 15px; border-radius: 10px; background-color: rgba(255,255,255,0.07);
+    margin-right: 5px;
+}

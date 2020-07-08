@@ -6,6 +6,7 @@ import { CommentsComponent } from './pages/comments/comments.component';
 import { UsersComponent } from './pages/users/users.component';
 import { ProjectDetailsComponent } from './pages/project-details/project-details.component';
 import { AllProjectsComponent } from './pages/all-projects/all-projects.component';
+import { ProjectOverviewComponent } from './pages/project-overview/project-overview.component';
 
 
 const routes: Routes = [
@@ -18,16 +19,22 @@ const routes: Routes = [
         component: HomeComponent
       },
       {
-        path: 'comments',
-        component: CommentsComponent
-      },
-      {
-        path: 'users',
-        component: UsersComponent
-      },
-      {
         path: 'project',
-        component: ProjectDetailsComponent
+        component: ProjectOverviewComponent,
+        children: [
+          {
+            path: '',
+            component: ProjectDetailsComponent
+          },
+          {
+            path: 'comments',
+            component: CommentsComponent
+          },
+          {
+            path: 'users',
+            component: UsersComponent
+          },
+        ]
       },
       {
         path: 'projects',

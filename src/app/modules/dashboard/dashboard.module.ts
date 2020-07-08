@@ -28,10 +28,18 @@ import {TokenInterceptor} from '../login/_interceptors/token.interceptor';
 import { BrowserModule } from '@angular/platform-browser';
 import { LoginService } from '../login/_services/login.service';
 import { TokenService } from '../login/_services/token.service';
+import {MatSelectModule} from '@angular/material/select';
+import {MatMenuModule} from '@angular/material/menu';
+import { ProjectOverviewComponent } from './pages/project-overview/project-overview.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { AddItemMobileComponent } from './components/add-item/add-item-mobile/add-item-mobile.component';
+import { AddItemDesktopComponent } from './components/add-item/add-item-desktop/add-item-desktop.component';
+import {MatRadioModule} from '@angular/material/radio';
 
 
 @NgModule({
-  declarations: [DashboardComponent, HomeComponent, UserComponent, NavbarComponent, ProjectDetailsComponent, CommentsComponent, ProjectItemComponent, AddUserComponent, UsersComponent, LogoutComponent, ProjectNavbarComponent, AllProjectsComponent, AddProjectMobileComponent, AddProjectDesktopComponent],
+  declarations: [DashboardComponent, HomeComponent, UserComponent, NavbarComponent, ProjectDetailsComponent, CommentsComponent, ProjectItemComponent, AddUserComponent, UsersComponent, LogoutComponent, ProjectNavbarComponent, AllProjectsComponent, AddProjectMobileComponent, AddProjectDesktopComponent, ProjectOverviewComponent, AddItemMobileComponent, AddItemDesktopComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,
@@ -42,7 +50,12 @@ import { TokenService } from '../login/_services/token.service';
     MatInputModule,
     MatBottomSheetModule,
     ReactiveFormsModule,
-    FormsModule
+    MatSelectModule,
+    FormsModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatCheckboxModule,
+    MatRadioModule
   ],
   providers: [
   ]
