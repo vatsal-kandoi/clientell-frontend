@@ -17,16 +17,19 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { ProjectNavbarComponent } from './components/navbar/sub-components/project-navbar/project-navbar.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AllProjectsComponent } from './pages/all-projects/all-projects.component';
+import {MatDividerModule} from '@angular/material/divider';
 
 
 
 @NgModule({
-  declarations: [DashboardComponent, HomeComponent, UserComponent, NavbarComponent, ProjectDetailsComponent, AddProjectComponent, CommentsComponent, ProjectItemComponent, AddUserComponent, UsersComponent, LogoutComponent, ProjectNavbarComponent],
+  declarations: [DashboardComponent, HomeComponent, UserComponent, NavbarComponent, ProjectDetailsComponent, AddProjectComponent, CommentsComponent, ProjectItemComponent, AddUserComponent, UsersComponent, LogoutComponent, ProjectNavbarComponent, AllProjectsComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,
     MatIconModule,
     MatButtonModule,
+    MatDividerModule,
     ReactiveFormsModule,
     FormsModule
   ]
