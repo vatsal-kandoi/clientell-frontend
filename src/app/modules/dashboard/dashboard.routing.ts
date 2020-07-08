@@ -1,12 +1,34 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
+import { HomeComponent } from './pages/home/home.component';
+import { CommentsComponent } from './pages/comments/comments.component';
+import { UsersComponent } from './pages/users/users.component';
+import { ProjectDetailsComponent } from './pages/project-details/project-details.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent
+    component: DashboardComponent,
+    children: [
+      {
+        path: '',
+        component: HomeComponent
+      },
+      {
+        path: 'comments',
+        component: CommentsComponent
+      },
+      {
+        path: 'users',
+        component: UsersComponent
+      },
+      {
+        path: 'project',
+        component: ProjectDetailsComponent
+      }
+    ]
   }
 ];
 

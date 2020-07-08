@@ -1,0 +1,14 @@
+<ng-container *ngIf="name == 'View more'">
+    <div class="project-image">
+        <div class="text"> +{{letter}}</div>
+    </div>
+    <div>{{name}}</div>
+</ng-container>
+
+<ng-container *ngIf="name != 'View more'">
+    <div class="project-image">
+        <div class="project-status" [ngClass]="{'active': active, 'inactive': !active}"></div>
+        <div class="text"> {{letter}}</div>
+    </div>
+    <div>{{name}}</div>
+</ng-container>

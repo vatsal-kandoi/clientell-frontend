@@ -1,1 +1,21 @@
-<p>navbar works!</p>
+<div class="container column center">
+    <div class="navbar">
+        <div class="hello-text">Hello Vatsal</div>
+        <p>Continue with monitoring your projects, and track the progress of your team</p>
+        <input placeholder="Project name" (keyup)="filter()" [formControl]="projectName">
+        <div class="projects">
+            <ng-container *ngIf="projects.length < 6">
+                <ng-container *ngFor="let project of projectsToShow">
+                    <project-navbar class="project column" [active]="project.active" [name]="project.name" [letter]="project.letter"></project-navbar>
+                </ng-container>
+                <project-navbar class="project column" [name]="'Add projects'" [letter]="'+'"></project-navbar>
+            </ng-container>
+            <ng-container *ngIf="projects.length > 5">
+                <ng-container *ngFor="let project of projectsToShow">
+                    <project-navbar class="project column" [active]="project.active" [name]="project.name" [letter]="project.letter"></project-navbar>
+                </ng-container>
+                <project-navbar class="project column" [name]="'View more'" [letter]="projects.length - projectsToShow.length"></project-navbar>
+            </ng-container>
+        </div>
+    </div>
+</div>

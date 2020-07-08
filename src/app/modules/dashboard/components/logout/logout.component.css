@@ -1,0 +1,10 @@
+mat-icon{
+    margin-left: 10px;
+}
+div{
+    display: flex; align-items: center;
+    cursor: pointer;
+}
+div:hover{
+    color: tomato;
+}

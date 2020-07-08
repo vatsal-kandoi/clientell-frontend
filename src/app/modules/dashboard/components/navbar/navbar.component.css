@@ -1,0 +1,77 @@
+.center {
+    align-items: center;
+}
+.navbar{
+    width: 60%;    
+    margin-top: 100px;
+}
+.hello-text{
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+option {
+    color: var(--text-alt);
+    background-color: rgba(255, 255, 255, 0.07);    
+}
+
+.projects{
+    margin-top: 10px;
+    display: flex; flex-wrap: wrap;
+}
+.project {
+    margin: 10px 0px;
+    width: calc(30%); 
+    
+    cursor: pointer;
+    align-items: center;
+}
+.project-image {
+    padding-top: 100%; width: 100%;
+    margin-bottom: 5px;
+    border-radius: 10px;
+
+    background-color: rgba(255, 255, 255, 0.07);
+    position: relative;
+}
+
+.project:nth-of-type(1n) {
+    margin-right: 5%;
+}
+.project:nth-of-type(2n) {
+    margin-right: 5%;
+}
+.project:nth-of-type(3n) {
+    margin-right: 0%;
+}
+
+input{
+    width: 100%; height: 40px;
+    color: var(--text-alt);
+    padding: 0 20px;
+    background-color: rgba(255, 255, 255, 0.07);
+
+    outline: none; border: none; border-radius: 5px;
+}
+input:active{
+    outline: none;
+}
+
+@media only screen and (max-width: 950px) {
+    .navbar{
+        width: 80%;    
+        margin-top: 70px;
+    }   
+    .hello-text{
+        font-size: 2rem;
+    }
+}
+@media only screen and (max-width: 800px) {
+    .navbar{
+        width: 90%;    
+        margin-top: 50px;
+    }   
+    .hello-text{
+        font-size: 1.5rem;
+    }
+}
