@@ -1,6 +1,6 @@
 <div class="row space-between">
     <div><h2>All projects ({{projects.length}})</h2></div>
-    <div><button mat-raised-button color="primary">Add project</button></div>
+    <div><button (click)="addProject()" mat-raised-button color="primary">Add project</button></div>
 </div>
 
 <div *ngFor="let project of projects; let index = index">

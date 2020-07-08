@@ -1,0 +1,7 @@
+<h3>Create a new project</h3>
+<mat-form-field color="accent" class="example-full-width">
+    <mat-label>Project name</mat-label>
+    <input [formControl]="value" matInput placeholder="Ex. Project Pizza">
+</mat-form-field>
+<button mat-button color="accent" (click)="add()">Create project</button>
+<div class="error">{{error}}</div>
