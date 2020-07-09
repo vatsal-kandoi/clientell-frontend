@@ -17,6 +17,7 @@ export class ActiveProjectService {
   links: any[];
 
   dashboardFetched: Subject<boolean>;
+  usersUpdated: Subject<boolean>;
 
   constructor(private projectsService: ProjectsService, private http: HttpClient, private url: UrlService) {
     this.activeProjectID = this.projectsService.activeProjectID;    
@@ -26,7 +27,32 @@ export class ActiveProjectService {
       this.fetchProjectDashboard();
     });
     this.dashboardFetched = new Subject();
+    this.usersUpdated = new Subject();
   }
+
+  removeUser(email: string) {
+    let temp = [];
+    this.users.forEach((element) => {
+      if (element.user.email != email) {
+        temp.push(element);
+      }
+    })
+    this.users = JSON.parse(JSON.stringify(temp));
+    this.usersUpdated.next(true);
+  }
+
+  addUser(name, email, role, id) {
+    this.users.push({
+      access: role, 
+      user: {
+        name, 
+        email,
+        _id: id
+      }
+    });
+    this.usersUpdated.next(true);
+  }
+
 
   fetchProjectDashboard() {
     return this.http.post(this.url.allProjectsUrl, {'projectId': this.activeProjectID}).subscribe((val: any) => {
@@ -40,7 +66,6 @@ export class ActiveProjectService {
         this.dashboardFetched.next(true);
       }
 
-      console.log(val);
     });
   }
 }

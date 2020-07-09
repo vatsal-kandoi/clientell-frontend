@@ -10,6 +10,9 @@ export class UrlService {
   allProjectsUrl: string;
   addProjectUrl: string;
   projectDashboardUrl: string;
+  userSearchUrl: string;
+  addUserToProjectUrl: string;
+  removeUserToProjectUrl: string;
   constructor() {
     this.baseUrl = `http://localhost:3000/api`;
     this.signupUrl = `${this.baseUrl}/auth/signup`;
@@ -17,5 +20,8 @@ export class UrlService {
     this.allProjectsUrl = `${this.baseUrl}/user/project`;
     this.addProjectUrl = `${this.baseUrl}/project/create`;
     this.projectDashboardUrl = `${this.baseUrl}/user/project`
+    this.userSearchUrl = `${this.baseUrl}/user/search`;
+    this.addUserToProjectUrl = `${this.baseUrl}/project/user/add`;
+    this.removeUserToProjectUrl = `${this.baseUrl}/project/user/remove`;
   }
 }

@@ -16,7 +16,7 @@
         <div class="row center">
             <div *ngIf="users.length > 2" class="users row">
                 <div class="user">
-                    + {{users.length - usersToShow.length}
+                    +{{users.length - usersToShow.length}}
                 </div>
                 <div *ngFor="let user of usersToShow" class="user">
                     {{user.user.name[0]}}

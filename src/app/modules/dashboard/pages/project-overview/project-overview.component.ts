@@ -36,6 +36,11 @@ export class ProjectOverviewComponent implements OnInit {
         this.loadingContent = false;
       }
     })
+    this.activeProject.usersUpdated.subscribe((val) => {
+      if (val) {
+        this.users = this.activeProject.users;
+      }
+    });
   }
 
   navigate(direction: string) {

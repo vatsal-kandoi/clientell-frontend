@@ -3,8 +3,8 @@
 
     <div class="users">
         <div class="input">
-            <input placeholder="Enter name or email">
-            <div class="icon">
+            <input [formControl]="userQuery" placeholder="Enter name or email">
+            <div (click)="search()" class="icon">
                 <mat-icon>search</mat-icon>
             </div>
         </div>
@@ -12,11 +12,11 @@
             <div class="row space-between">
                 <div class="row center">
                     <div class="user-img">
-                        {{user.user.name[0]}}
+                        {{user.name[0]}}
                     </div>
                     <div>
-                        <div class="name">{{user.user.name}}</div>
-                        <div class="email">{{user.user.email}}</div>
+                        <div class="name">{{user.name}}</div>
+                        <div class="email">{{user.email}}</div>
                     </div>
                 </div>
                 <div class="row center" *ngIf="user.added == false">
@@ -24,9 +24,9 @@
                         <mat-icon>add</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                        <button (click)="addAs('client')" mat-menu-item>Client</button>
-                        <button (click)="addAs('developer')" mat-menu-item>Developer</button>
-                        <button (click)="addAs('admin')" mat-menu-item>Admin</button>
+                        <button (click)="addAs('client', user.name, user.email)" mat-menu-item>Client</button>
+                        <button (click)="addAs('developer',user.name, user.email)" mat-menu-item>Developer</button>
+                        <button (click)="addAs('admin',user.name, user.email)" mat-menu-item>Admin</button>
                     </mat-menu>
                 </div>
                 <div class="row center" *ngIf="user.added == true">
@@ -55,7 +55,7 @@
                     <span class="status">
                         {{user.access}}
                     </span>
-                    <button *ngIf="access == 'admin'" mat-icon-button color="error">
+                    <button (click)="deleteUser(user.user.email)" *ngIf="access == 'admin'" mat-icon-button color="error">
                         <mat-icon>delete_outline</mat-icon>
                     </button>
                 </div>
