@@ -36,6 +36,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { AddItemMobileComponent } from './components/add-item/add-item-mobile/add-item-mobile.component';
 import { AddItemDesktopComponent } from './components/add-item/add-item-desktop/add-item-desktop.component';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 @NgModule({
@@ -44,7 +46,9 @@ import {MatRadioModule} from '@angular/material/radio';
     CommonModule,
     DashboardRoutingModule,
     MatIconModule,
+    MatNativeDateModule,
     MatButtonModule,
+    MatDatepickerModule,
     MatDividerModule,
     MatDialogModule,
     MatInputModule,

@@ -1,142 +1,66 @@
+<div>
+    <h3>Add a user</h3>
 
-<h3>Add a user</h3>
-
-<div class="users">
-    <div class="input">
-        <input placeholder="Enter name or email">
-        <div class="icon">
-            <mat-icon>search</mat-icon>
-
+    <div class="users">
+        <div class="input">
+            <input placeholder="Enter name or email">
+            <div class="icon">
+                <mat-icon>search</mat-icon>
+            </div>
         </div>
+        <li *ngFor="let user of usersSearched; let index= index">
+            <div class="row space-between">
+                <div class="row center">
+                    <div class="user-img">
+                        {{user.letter}}
+                    </div>
+                    <div>
+                        <div class="name">{{user.name}}</div>
+                        <div class="email">{{user.email}}</div>
+                    </div>
+                </div>
+                <div class="row center" *ngIf="user.added == false">
+                    <button [matMenuTriggerFor]="menu" mat-icon-button color="accent">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="addAs('client')" mat-menu-item>Client</button>
+                        <button (click)="addAs('developer')" mat-menu-item>Developer</button>
+                        <button (click)="addAs('admin')" mat-menu-item>Admin</button>
+                    </mat-menu>
+                </div>
+                <div class="row center" *ngIf="user.added == true">
+                    <span class="status">
+                        {{user.access}}
+                    </span>
+                </div>
+            </div>
+            <mat-divider *ngIf="index != usersSearched.length - 1"></mat-divider>
+        </li>
     </div>
-    <li>
-        <div class="row space-between">
-            <div class="row center">
-                <div class="user-img">
-                    V
+    <h3>Project members</h3>
+    <div class="users">
+        <li *ngFor="let user of users; let index= index">
+            <div class="row space-between">
+                <div class="row center">
+                    <div class="user-img">
+                        {{user.letter}}
+                    </div>
+                    <div>
+                        <div class="name">{{user.name}}</div>
+                        <div class="email">{{user.email}}</div>
+                    </div>
                 </div>
-                <div>
-                    <div class="name">Vatsal Kandoi</div>
-                    <div class="email">vatsalkandoi1998@gmail.com</div>
-                </div>
-            </div>
-            <div>
-                <button mat-icon-button color="accent">
-                    <mat-icon>add</mat-icon>
-                </button>
-            </div>
-        </div>
-    </li>
-</div>
-<h3>Project members</h3>
-<div class="users">
-    <li>
-        <div class="row space-between">
-            <div class="row center">
-                <div class="user-img">
-                    V
-                </div>
-                <div>
-                    <div class="name">Vatsal Kandoi</div>
-                    <div class="email">vatsalkandoi1998@gmail.com</div>
+                <div class="row center">
+                    <span class="status">
+                        {{user.access}}
+                    </span>
+                    <button *ngIf="access == 'admin'" mat-icon-button color="error">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
                 </div>
             </div>
-            <div>
-                <span class="status">
-                    Client
-                </span>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-    </li>
-    <mat-divider></mat-divider>
-    <li>
-        <div class="row space-between">
-            <div class="row center">
-                <div class="user-img">
-                    V
-                </div>
-                <div>
-                    <div class="name">Vatsal Kandoi</div>
-                    <div class="email">vatsalkandoi1998@gmail.com</div>
-                </div>
-            </div>
-            <div>
-                <span class="status">
-                    Client
-                </span>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-    </li>
-    <mat-divider></mat-divider>
-    <li>
-        <div class="row space-between">
-            <div class="row center">
-                <div class="user-img">
-                    V
-                </div>
-                <div>
-                    <div class="name">Vatsal Kandoi</div>
-                    <div class="email">vatsalkandoi1998@gmail.com</div>
-                </div>
-            </div>
-            <div>
-                <span class="status">
-                    Client
-                </span>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-    </li>
-    <mat-divider></mat-divider>
-    <li>
-        <div class="row space-between">
-            <div class="row center">
-                <div class="user-img">
-                    V
-                </div>
-                <div>
-                    <div class="name">Vatsal Kandoi</div>
-                    <div class="email">vatsalkandoi1998@gmail.com</div>
-                </div>
-            </div>
-            <div>
-                <span class="status">
-                    Client
-                </span>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-    </li>
-    <mat-divider></mat-divider>
-    <li>
-        <div class="row space-between">
-            <div class="row center">
-                <div class="user-img">
-                    V
-                </div>
-                <div>
-                    <div class="name">Vatsal Kandoi</div>
-                    <div class="email">vatsalkandoi1998@gmail.com</div>
-                </div>
-            </div>
-            <div>
-                <span class="status">
-                    Client
-                </span>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-    </li>
+            <mat-divider *ngIf="index != users.length - 1"></mat-divider>
+        </li>
+    </div>   
 </div>

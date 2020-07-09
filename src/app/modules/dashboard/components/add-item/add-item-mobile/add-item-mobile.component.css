@@ -5,3 +5,9 @@
 .error{
     color: tomato;
 }
+.max-width{
+    max-width: 300px;
+}
+.margin {
+    margin-top: 15px;
+}

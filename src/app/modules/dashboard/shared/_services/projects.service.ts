@@ -47,6 +47,5 @@ export class ProjectsService {
         this.projectFetched.next(true);
       }
     });
-
   }
 }

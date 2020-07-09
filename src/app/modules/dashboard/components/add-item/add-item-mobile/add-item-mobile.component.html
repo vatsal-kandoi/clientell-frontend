@@ -1,20 +1,28 @@
 <div class="center">
-    <div>
+    <div class="max-width">
         <h3>Add to agenda</h3>
         <div>
-            <mat-radio-group aria-label="Select an option">
-            <mat-radio-button value="1">Option 1</mat-radio-button>
-            <mat-radio-button value="2">Option 2</mat-radio-button>
+            <mat-radio-group [formControl]="type" aria-label="Select an option">
+                <mat-radio-button value="feature" class="margin-right">Project Feature</mat-radio-button>
+                <mat-radio-button value="issue">Project Issue</mat-radio-button>
             </mat-radio-group>
         </div>
-        <div>
-            <mat-form-field color="accent" class="example-full-width">
+        <div class="full-width margin">
+            <mat-form-field color="accent" class="full-width">
                 <mat-label>Description</mat-label>
-                <input [formControl]="value" matInput placeholder="Ex. Project Pizza">
+                <input [formControl]="value" matInput placeholder="Ex. Project Pizza needs a topping">
             </mat-form-field>
         </div>
         <div>
-            <button mat-button color="accent" (click)="add()">Create project</button>
+            <mat-form-field color="accent" *ngIf="showCalender" appearance="fill">
+                <mat-label>Choose a due date</mat-label>
+                <input matInput [matDatepicker]="picker">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+        </div>
+        <div>
+            <button mat-button color="accent" (click)="add()">Create agenda</button>
         </div>
         <div class="error">{{error}}</div>
     </div>

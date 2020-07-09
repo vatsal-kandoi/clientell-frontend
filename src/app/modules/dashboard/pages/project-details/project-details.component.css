@@ -1,5 +1,19 @@
+a {
+    outline: none;
+    text-decoration: none;
+    color: inherit;
+}
+a:active{
+    outline: none;
+    text-decoration: none;
+    color: inherit;
+
+}
 .space-between {
     justify-content: space-between; align-items: center;
+}
+.align-center {
+    align-items: center;
 }
 
 li{
@@ -10,11 +24,16 @@ ul {
     list-style: none;
     text-decoration: none;
 }
-.feats{
-    padding: 0px 20px;
-    margin-bottom: 10px;
-}
+
 .status{
     padding: 5px 15px; border-radius: 10px; background-color: rgba(255,255,255,0.07);
     margin-right: 5px;
+}
+
+.padding{
+    padding: 0px 20px;
+    margin-bottom: 10px;
+}
+.completed {
+    background-color: rgba(84, 201, 84, 0.486);
 }

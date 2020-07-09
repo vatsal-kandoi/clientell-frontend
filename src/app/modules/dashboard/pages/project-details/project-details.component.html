@@ -1,208 +1,56 @@
-<h3>Project links</h3>
-<div class="feats">
-    <li>
-        Website link
-    </li>
-    <li>
-        UI link
-    </li>
-    <li>
-        Design link
-    </li>
-    <li>
-        SRS document link
-    </li>
-</div>
-<h3>Project features</h3>
-<div class="feats">
-    <li>
-        <div class="row space-between">
-            <div>
-                <mat-checkbox checked="true" disabled>
-                    Create a new project
-                </mat-checkbox>
+<div>
+    <h3>Project links</h3>
+    <div class="padding">
+        <li *ngFor="let link of links">
+            <a href="{{link.link}}">{{link.name}}</a>
+        </li>
+    </div>
+    <h3>Project features</h3>
+    <div class="padding">
+        <li *ngFor="let feature of features; let index = index">
+            <div class="row space-between">
+                <div>
+                    <mat-checkbox checked="{{feature.completed}}" disabled="{{access != 'developer'}}">
+                        {{ feature.description }}
+                    </mat-checkbox>
+                </div>
+                <div class="row align-center">
+                    <span class="status" [ngClass]="{'completed': feature.status == 'Completed'}">
+                        {{ feature.status }}
+                    </span>
+                    <button *ngIf="access == 'client'" mat-icon-button color="accent">
+                        <mat-icon>done_all</mat-icon>
+                    </button>
+                    <button *ngIf="access == 'admin'" mat-icon-button color="error">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </div>
             </div>
-            <div>
-                <span class="status">
-                    On progress
-                </span>
-                <button mat-icon-button color="accent">
-                    <mat-icon>done_all</mat-icon>
-                </button>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
+            <mat-divider *ngIf="index != features.length - 1"></mat-divider>
+        </li>
+    </div>
+    <h3>Project issues</h3>
+    <div class="padding">
+        <li *ngFor="let issue of issues; let index = index">
+            <div class="row space-between">
+                <div>
+                    <mat-checkbox checked="{{issue.completed}}" disabled="{{access != 'developer'}}">
+                        {{ issue.description }}
+                    </mat-checkbox>
+                </div>
+                <div class="row align-center">
+                    <span class="status" [ngClass]="{'completed': issue.status == 'Completed'}">
+                        {{ issue.status }}
+                    </span>
+                    <button *ngIf="access == 'client'" mat-icon-button color="accent">
+                        <mat-icon>done_all</mat-icon>
+                    </button>
+                    <button *ngIf="access == 'client'" mat-icon-button color="error">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </div>
             </div>
-        </div>
-        <mat-divider></mat-divider>
-    </li>
-    <li>
-        <div class="row space-between">
-            <div>
-                <mat-checkbox>
-                    Create a new project
-                </mat-checkbox>
-            </div>
-            <div>
-                <span class="status">
-                    On progress
-                </span>
-                <button mat-icon-button color="accent">
-                    <mat-icon>done_all</mat-icon>
-                </button>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-        <mat-divider></mat-divider>
-    </li>
-    <li>
-        <div class="row space-between">
-            <div>
-                <mat-checkbox>
-                    Create a new project
-                </mat-checkbox>
-            </div>
-            <div>
-                <span class="status">
-                    On progress
-                </span>
-                <button mat-icon-button color="accent">
-                    <mat-icon>done_all</mat-icon>
-                </button>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-        <mat-divider></mat-divider>
-    </li>
-    <li>
-        <div class="row space-between">
-            <div>
-                <mat-checkbox>
-                    Create a new project
-                </mat-checkbox>
-            </div>
-            <div>
-                <span class="status">
-                    On progress
-                </span>
-                <button mat-icon-button color="accent">
-                    <mat-icon>done_all</mat-icon>
-                </button>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-    </li>
-</div>
-<h3>Project issues</h3>
-<div class="feats">
-    <li>
-        <div class="row space-between">
-            <div>
-                <mat-checkbox>
-                    Create a new project
-                </mat-checkbox>
-            </div>
-            <div>
-                <span class="status">
-                    On progress
-                </span>
-                <button mat-icon-button color="accent">
-                    <mat-icon>done_all</mat-icon>
-                </button>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-        <mat-divider></mat-divider>
-    </li>
-    <li>
-        <div class="row space-between">
-            <div>
-                <mat-checkbox>
-                    Create a new project
-                </mat-checkbox>
-            </div>
-            <div>
-                <span class="status">
-                    On progress
-                </span>
-                <button mat-icon-button color="accent">
-                    <mat-icon>done_all</mat-icon>
-                </button>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-        <mat-divider></mat-divider>
-    </li>
-    <li>
-        <div class="row space-between">
-            <div>
-                <mat-checkbox>
-                    Create a new project
-                </mat-checkbox>
-            </div>
-            <div>
-                <span class="status">
-                    On progress
-                </span>
-                <button mat-icon-button color="accent">
-                    <mat-icon>done_all</mat-icon>
-                </button>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-        <mat-divider></mat-divider>
-    </li>
-    <li>
-        <div class="row space-between">
-            <div>
-                <mat-checkbox>
-                    Create a new project
-                </mat-checkbox>
-            </div>
-            <div>
-                <span class="status">
-                    On progress
-                </span>
-                <button mat-icon-button color="accent">
-                    <mat-icon>done_all</mat-icon>
-                </button>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-        <mat-divider></mat-divider>
-    </li>
-    <li>
-        <div class="row space-between">
-            <div>
-                <mat-checkbox>
-                    Create a new project
-                </mat-checkbox>
-            </div>
-            <div>
-                <span class="status">
-                    On progress
-                </span>
-                <button mat-icon-button color="accent">
-                    <mat-icon>done_all</mat-icon>
-                </button>
-                <button mat-icon-button color="error">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </div>
-    </li>
+            <mat-divider *ngIf="index != features.length - 1"></mat-divider>
+        </li>
+    </div>
 </div>
