@@ -8,11 +8,15 @@ import {DisplaySizeService} from '../../shared/_services/display-size.service'
 })
 export class DashboardComponent implements OnInit {
   displayType: string;
+  opened: boolean;
   constructor(private size: DisplaySizeService) {
-    this.displayType = this.size.displayType;
+    this.opened = false;
   }
 
   ngOnInit(): void {
+    this.displayType = this.size.displayType;
   }
-
+  toggle() {
+    this.opened = !this.opened;
+  }
 }

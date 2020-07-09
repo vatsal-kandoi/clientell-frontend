@@ -35,3 +35,26 @@ logout {
         width: 50%;
     }
 }
+
+@media only screen and (max-width: 850px) {
+    .right{
+        width: 100%;
+    }
+    .left {
+        position: fixed;
+        background-color: var(--surface);
+        top: 0px;
+        left: -350px;
+        width: 350px; z-index: 2;
+        transition: all 0.5s ease-out;
+    }
+}
+.show {
+    left: 0px;
+}
+.left .icon {
+    display: fixed; top: 10px; left: 10px
+}
+.right .icon {
+    display: absolute !important; top: 10px; left: 10px
+}

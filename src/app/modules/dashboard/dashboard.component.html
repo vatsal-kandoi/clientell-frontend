@@ -1,9 +1,17 @@
 <div class="container background fixed row">
-    <div class="left">
+    <div class="left" [ngClass]="{'show':opened}">
+        <span class="icon" (click)="toggle()" *ngIf="displayType == 'mobile'">
+            <mat-icon aria-hidden="false" aria-label="Menu icon>">close</mat-icon>
+        </span>
+
         <logout></logout>
         <navbar></navbar>
     </div>
+
     <div class="right">
+        <span class="icon" (click)="toggle()" *ngIf="displayType == 'mobile'">
+            <mat-icon aria-hidden="false" class="icon" aria-label="Menu icon>">menu</mat-icon>
+        </span>
         <router-outlet></router-outlet>
     </div>
 </div>

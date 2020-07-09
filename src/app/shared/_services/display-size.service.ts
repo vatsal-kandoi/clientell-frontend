@@ -11,7 +11,7 @@ export class DisplaySizeService {
   }
 
   setSize(num: number) {
-    if(num < 700) {
+    if(num < 850) {
       this.displayType = 'mobile';
     } else {
       this.displayType = 'desktop'

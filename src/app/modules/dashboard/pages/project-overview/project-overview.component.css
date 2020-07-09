@@ -21,3 +21,9 @@
 .margin-top{
     margin-top: 25px;
 }
+
+@media only screen and (max-width: 870px) {
+    .users{
+        display: none;
+    }
+}
