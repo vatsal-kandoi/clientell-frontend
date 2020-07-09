@@ -11,28 +11,29 @@ import { ActiveProjectService } from '../../../shared/_services/active-project.s
   styleUrls: ['./add-item-mobile.component.css']
 })
 export class AddItemMobileComponent implements OnInit {
-  error: string;
   value: FormControl;
   type: FormControl;
   dueDate: FormControl;
-  showCalender: boolean;
+  error: string;
+  selectedVal: any;
+  linkName: FormControl;
+  link: FormControl;
+  access: string;
 
   constructor(private bottomSheetRef: MatBottomSheetRef<AddProjectMobileComponent>, private projectsService: ProjectsService, private activeProject: ActiveProjectService) {
     this.value = new FormControl('');
     this.type = new FormControl('');
     this.dueDate = new FormControl('');
-    this.showCalender = false;
+    this.linkName = new FormControl('');
+    this.link = new FormControl('');
   }
 
   ngOnInit(): void {
+    this.access = this.activeProject.access;
   }
 
   toggle() {
-    if (this.type.value == 'feature') {
-      this.showCalender = true;
-    } else {
-      this.showCalender = false;
-    }
+    this.selectedVal = this.type.value;
   }
   add() {
     if (this.value.value == '' || this.type.value == undefined) {
@@ -44,7 +45,10 @@ export class AddItemMobileComponent implements OnInit {
     }
     else if (this.type.value == 'issue') {
       this.activeProject.addIssue(this.value.value);
+    } else if (this.type.value == 'link') {
+      this.activeProject.addLink(this.linkName.value, this.link.value)
     }
+
     this.bottomSheetRef.dismiss();
   }
 

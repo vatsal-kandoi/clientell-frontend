@@ -2,24 +2,41 @@
     <div class="max-width">
         <h3>Add to agenda</h3>
         <div>
-            <mat-radio-group [formControl]="type" aria-label="Select an option">
-                <mat-radio-button value="feature" class="margin-right">Project Feature</mat-radio-button>
-                <mat-radio-button value="issue">Project Issue</mat-radio-button>
+            <mat-radio-group (change)="toggle()" [formControl]="type" aria-label="Select an option">
+                <div class="margin">
+                    <mat-radio-button value="feature">Project Feature</mat-radio-button>
+                </div>
+                <div class="margin">
+                    <mat-radio-button value="issue">Project Issue</mat-radio-button>
+                </div>
+                <div class="margin">
+                    <mat-radio-button value="link">Link</mat-radio-button>
+                </div>
             </mat-radio-group>
         </div>
-        <div class="full-width margin">
+        <div class="full-width margin" *ngIf="selectedVal != 'link'" >
             <mat-form-field color="accent" class="full-width">
                 <mat-label>Description</mat-label>
                 <input [formControl]="value" matInput placeholder="Ex. Project Pizza needs a topping">
             </mat-form-field>
         </div>
-        <div>
-            <mat-form-field color="accent" *ngIf="showCalender" appearance="fill">
+        <div *ngIf="selectedVal == 'feature'" >
+            <mat-form-field color="accent" appearance="fill">
                 <mat-label>Choose a due date</mat-label>
                 <input [formControl]="dueDate" matInput [matDatepicker]="picker">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
+            </mat-form-field>
+        </div>
+        <div *ngIf="selectedVal == 'link'">
+            <mat-form-field color="accent" class="full-width">
+                <mat-label>Link Description</mat-label>
+                <input [formControl]="linkName" matInput placeholder="Ex. Project Pizza website">
+            </mat-form-field>
+            <mat-form-field color="accent" class="full-width">
+                <mat-label>Link</mat-label>
+                <input [formControl]="link" matInput placeholder="Ex. https://project-pizza.com">
+            </mat-form-field>
         </div>
         <div>
             <button mat-button color="accent" (click)="add()">Create agenda</button>

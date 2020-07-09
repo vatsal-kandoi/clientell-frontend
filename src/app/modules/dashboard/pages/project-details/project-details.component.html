@@ -1,8 +1,16 @@
 <div>
     <h3>Project links</h3>
     <div class="padding">
-        <li *ngFor="let link of links">
-            <a href="{{link.link}}">{{link.name}}</a>
+        <li *ngFor="let link of links; let index = index">
+            <div class="row space-between">
+                <div>
+                    <a href="{{link.link}}">{{link.for}}</a>
+                </div>
+                <button (click)="delete('link',link.for)" mat-icon-button color="error">
+                    <mat-icon>delete_outline</mat-icon>
+                </button>            
+            </div>
+            <mat-divider *ngIf="index != links.length - 1"></mat-divider>
         </li>
     </div>
     <h3>Project features</h3>
@@ -21,7 +29,7 @@
                     <button *ngIf="access == 'client'" mat-icon-button color="accent">
                         <mat-icon>done_all</mat-icon>
                     </button>
-                    <button (click)="delete(feature._id)" *ngIf="access == 'admin'" mat-icon-button color="error">
+                    <button (click)="delete('feature',feature._id)" *ngIf="access == 'admin'" mat-icon-button color="error">
                         <mat-icon>delete_outline</mat-icon>
                     </button>
                 </div>
@@ -34,23 +42,28 @@
         <li *ngFor="let issue of issues; let index = index">
             <div class="row space-between">
                 <div>
-                    <mat-checkbox checked="{{issue.completed}}" disabled="{{access != 'developer'}}">
+                    <mat-checkbox [checked]="issue.closed.value" disabled="{{access != 'developer'}}">
                         {{ issue.description }}
                     </mat-checkbox>
                 </div>
                 <div class="row align-center">
-                    <span class="status" [ngClass]="{'completed': issue.status == 'Completed'}">
-                        {{ issue.status }}
+                    <span class="status" [ngClass]="{'completed': issue.closed.value}">
+                        <ng-container *ngIf="!issue.closed.value">
+                            Open
+                        </ng-container>
+                        <ng-container *ngIf="issue.closed.value">
+                            Closed
+                        </ng-container>
                     </span>
-                    <button *ngIf="access == 'client'" mat-icon-button color="accent">
+                    <button *ngIf="access == 'client' || access == 'admin'" mat-icon-button color="accent">
                         <mat-icon>done_all</mat-icon>
                     </button>
-                    <button *ngIf="access == 'client'" mat-icon-button color="error">
+                    <button (click)="delete('issue', issue._id)" *ngIf="access == 'client' || access == 'admin'" mat-icon-button color="error">
                         <mat-icon>delete_outline</mat-icon>
                     </button>
                 </div>
             </div>
-            <mat-divider *ngIf="index != features.length - 1"></mat-divider>
+            <mat-divider *ngIf="index != issues.length - 1"></mat-divider>
         </li>
     </div>
 </div>

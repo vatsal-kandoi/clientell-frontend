@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 
 import {TokenService} from './token.service';
 import {AuthFetchedResponse} from '../../../shared/_interfaces/auth-response.interface';
-
+import {UserdataService} from './userdata.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +15,7 @@ export class LoginService {
   cachedRequests: Array<HttpRequest<any>> = [];
 
   
-  constructor(private url: UrlService, private http: HttpClient, private router: Router, private token: TokenService) {
+  constructor(private url: UrlService, private http: HttpClient, private router: Router, private token: TokenService, private user: UserdataService) {
     this.error = new Subject();
   }
 
@@ -46,9 +46,9 @@ export class LoginService {
     this.http.post(this.url.loginUrl, {email, password}).subscribe((data: AuthFetchedResponse) => {
       if (data.success == true) {
         this.token.setTokens(data.access_token, data.refresh_token);
+        this.user.setData(data.name, data.email);
         this.router.navigate(['/dashboard']);
       } else {
-        console.log(data);
         this.error.next(data.message);
         setTimeout(() => {
           this.error.next('');

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ProjectsService } from '../../shared/_services/projects.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { DisplaySizeService } from 'src/app/shared/_services/display-size.service';
@@ -22,7 +22,8 @@ export class ProjectOverviewComponent implements OnInit {
 
   usersToShow: any[];
   constructor(private router: Router, private projectsService: ProjectsService,
-    private bottomSheet: MatBottomSheet, private displaySize: DisplaySizeService, private dialog: MatDialog, private activeProject: ActiveProjectService) {
+    private bottomSheet: MatBottomSheet, private displaySize: DisplaySizeService, private dialog: MatDialog, private activeProject: ActiveProjectService, private route: ActivatedRoute
+    ) {
       this.loadingContent = true;
   }
 
@@ -34,6 +35,10 @@ export class ProjectOverviewComponent implements OnInit {
         this.usersToShow = JSON.parse(JSON.stringify(this.users)).splice(0,2);
         this.access = this.activeProject.access;
         this.loadingContent = false;
+      } else {
+        const projectId: string = this.route.snapshot.queryParamMap.get('projectId');
+        this.activeProject.activeProjectID = projectId;
+        this.activeProject.fetchProjectDashboard();
       }
     })
     this.activeProject.usersUpdated.subscribe((val) => {

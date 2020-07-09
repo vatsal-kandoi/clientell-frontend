@@ -24,7 +24,6 @@ export class TokenInterceptor implements HttpInterceptor {
       return next.handle(request).pipe(retry(3),catchError(this.handleError));      
     }
     let token = (this.accessTokenFailed) ? this.token.getRefeshToken() : this.token.getAccessToken();
-    console.log(token);
     request = request.clone({
       setHeaders: {
         'Content-Type': 'application/json',

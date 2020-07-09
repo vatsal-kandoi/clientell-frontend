@@ -20,6 +20,8 @@ export class ActiveProjectService {
   usersUpdated: Subject<boolean>;
   featuresUpdated: Subject<boolean>;
   issuesUpdated: Subject<boolean>;
+  linksUpdated: Subject<boolean>;
+
   constructor(private projectsService: ProjectsService, private http: HttpClient, private url: UrlService) {
     this.activeProjectID = this.projectsService.activeProjectID;    
     this.fetchProjectDashboard();
@@ -31,6 +33,7 @@ export class ActiveProjectService {
     this.usersUpdated = new Subject();
     this.featuresUpdated = new Subject();
     this.issuesUpdated = new Subject();
+    this.linksUpdated = new Subject();
   }
 
   removeUser(email: string) {
@@ -88,12 +91,61 @@ export class ActiveProjectService {
     });
   }
 
-  addIssue(description: string) {
+  addLink(description, link) {
+    this.http.post(this.url.addLinkUrl, {'linkFor': description, 'link': link, 'projectId': this.activeProjectID}).subscribe((val: any) => {
+      if (val.code == 200) {
+        this.links.push({
+          for: description,
+          link
+        });
+        this.linksUpdated.next(true);
+      }
+    })
+  }
 
+  removeLink(link_id) {
+    this.http.post(this.url.removeUrl, {'linkFor': link_id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
+      if (val.code == 200) {
+        let temp = [];
+        this.links.forEach((element) => {
+          if (element.for != link_id) {
+            temp.push(element);
+          }
+        })
+        this.links = JSON.parse(JSON.stringify(temp));
+        this.linksUpdated.next(true);
+      }
+    })
+  }
+  addIssue(description: string) {
+    this.http.post(this.url.addIssueToProjectUrl, {'description': description, 'projectId': this.activeProjectID}).subscribe((val: any) => {
+      if (val.code == 200) {
+        this.issues.push({
+          _id: val.id,
+          closed: {value: false, by: null},
+          description,
+          status: 'incomplete',
+        });
+
+        this.issuesUpdated.next(true);
+      }
+    });
   }
 
   removeIssue(id) {
-
+    this.http.post(this.url.removeIssueToProjectUrl, {'issueId': id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
+      if (val.code == 200) {
+        let temp = [];
+        this.issues.forEach((element) => {
+          if (element._id != id) {
+            temp.push(element);
+          }
+        })
+        this.issues = JSON.parse(JSON.stringify(temp));
+        this.issuesUpdated.next(true);
+      }
+      console.log(val);
+    });
   }
 
   fetchProjectDashboard() {
@@ -102,11 +154,14 @@ export class ActiveProjectService {
         this.access = val.access;
         this.name = val.name;
         this.features = val.features;
-        this.issues = val.issue;
+        this.issues = val.issues;
         this.links = val.links;
         this.users = val.users;
         this.dashboardFetched.next(true);
+      } else {
+        this.dashboardFetched.next(false);
       }
+
       console.log(val);
     });
   }

@@ -4,4 +4,6 @@ export interface AuthFetchedResponse {
   code: number;
   access_token: string;
   refresh_token: string;
+  name: string;
+  email: string;
 }

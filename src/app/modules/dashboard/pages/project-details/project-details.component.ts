@@ -37,10 +37,17 @@ export class ProjectDetailsComponent implements OnInit {
         this.issues = this.activeProject.issues;
       }
     });
+    this.activeProject.linksUpdated.subscribe((val) => {
+      if (val) {
+        this.links = this.activeProject.links;
+      }
+    })
   }
 
-  delete(id: string) {
-    this.activeProject.removeFeature(id);
+  delete(type: string, id: string) {
+    if (type == 'feature') this.activeProject.removeFeature(id);
+    else if (type == 'link') this.activeProject.removeLink(id);
+    else if (type == 'issue') this.activeProject.removeIssue(id);
   }
 
 }

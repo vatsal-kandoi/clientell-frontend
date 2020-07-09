@@ -17,6 +17,8 @@ export class UrlService {
   removeFeatureToProjectUrl: string;
   removeIssueToProjectUrl: string;
   addIssueToProjectUrl: string;
+  addLinkUrl: string;
+  removeUrl: string;
   constructor() {
     this.baseUrl = `http://localhost:3000/api`;
     this.signupUrl = `${this.baseUrl}/auth/signup`;
@@ -31,5 +33,7 @@ export class UrlService {
     this.removeFeatureToProjectUrl  = `${this.baseUrl}/project/feature/remove`
     this.addIssueToProjectUrl = `${this.baseUrl}/project/issue/add`;
     this.removeIssueToProjectUrl  = `${this.baseUrl}/project/issue/remove`
+    this.addLinkUrl = `${this.baseUrl}/project/link/add`;
+    this.removeUrl = `${this.baseUrl}/project/link/remove`;
   }
 }

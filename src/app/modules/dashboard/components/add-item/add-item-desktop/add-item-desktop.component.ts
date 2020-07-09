@@ -15,35 +15,41 @@ export class AddItemDesktopComponent implements OnInit {
   type: FormControl;
   dueDate: FormControl;
   error: string;
-  showCalender: boolean;
-
+  selectedVal: any;
+  linkName: FormControl;
+  link: FormControl;
+  access: string;
   constructor(public dialogRef: MatDialogRef<AddProjectDesktopComponent>, private projectsService: ProjectsService, private activeProject: ActiveProjectService) {
     this.value = new FormControl('');
     this.type = new FormControl('');
     this.dueDate = new FormControl('');
-    this.showCalender = false;
+    this.linkName = new FormControl('');
+    this.link = new FormControl('');
   }
 
   ngOnInit(): void {
+    this.access = this.activeProject.access;
   }
 
   toggle() {
-    if (this.type.value == 'feature') {
-      this.showCalender = true;
-    } else {
-      this.showCalender = false;
-    }
+    this.selectedVal = this.type.value;
   }
   add() {
-    if (this.value.value == '' || this.type.value == undefined) {
-      this.error = 'Input fields cannot be empty'
-      return;
-    }
     if (this.type.value == 'feature') {
+      if (this.value.value == '') {
+        this.error = 'Input fields cannot be empty'
+        return;
+      }
       this.activeProject.addFeature(this.value.value, this.dueDate.value);
     }
     else if (this.type.value == 'issue') {
+      if (this.value.value == '') {
+        this.error = 'Input fields cannot be empty'
+        return;
+      }
       this.activeProject.addIssue(this.value.value);
+    } else if (this.type.value == 'link') {
+      this.activeProject.addLink(this.linkName.value, this.link.value)
     }
     this.dialogRef.close();
   }
