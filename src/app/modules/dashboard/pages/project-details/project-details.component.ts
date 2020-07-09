@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActiveProjectService } from '../../shared/_services/active-project.service';
 
 @Component({
   selector: 'app-project-details',
@@ -6,30 +7,26 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./project-details.component.css']
 })
 export class ProjectDetailsComponent implements OnInit {
-  links = [
-    {
-      name: 'Website link',
-      link: 'https://vatsalkandoi.tech'
-    }
-  ]
-  access = 'admin';
-  features = [
-    {
-      description: 'Help me out',
-      completed: true,
-      status: 'Incomplete'
-    }
-  ]
-  issues = [
-    {
-      description: 'Help me out',
-      completed: true,
-      status: 'Completed'
-    }
-  ]
-  constructor() { }
+  links: any[]
+  access: string;
+  features: any[]
+  issues: any[]
+  constructor(private activeProject: ActiveProjectService ) {
+  }
 
   ngOnInit(): void {
+    this.access = this.activeProject.access;
+    this.features = this.activeProject.features;
+    this.issues = this.activeProject.issues;
+    this.links = this.activeProject.links;
+    this.activeProject.dashboardFetched.subscribe((val) => {
+      if (val) {
+        this.access = this.activeProject.access;
+        this.features = this.activeProject.features;
+        this.issues = this.activeProject.issues;
+        this.links = this.activeProject.links;
+      }
+    })
   }
 
 }

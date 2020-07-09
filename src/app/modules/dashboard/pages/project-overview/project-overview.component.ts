@@ -6,6 +6,7 @@ import { DisplaySizeService } from 'src/app/shared/_services/display-size.servic
 import { MatDialog } from '@angular/material/dialog';
 import { AddItemDesktopComponent } from '../../components/add-item/add-item-desktop/add-item-desktop.component';
 import { AddItemMobileComponent } from '../../components/add-item/add-item-mobile/add-item-mobile.component';
+import {ActiveProjectService} from '../../shared/_services/active-project.service';
 
 @Component({
   selector: 'app-project-overview',
@@ -13,11 +14,28 @@ import { AddItemMobileComponent } from '../../components/add-item/add-item-mobil
   styleUrls: ['./project-overview.component.css']
 })
 export class ProjectOverviewComponent implements OnInit {
+  loadingContent: boolean;
 
+  name: string;
+  access: string;
+  users: any[];
+
+  usersToShow: any[];
   constructor(private router: Router, private projectsService: ProjectsService,
-    private bottomSheet: MatBottomSheet, private displaySize: DisplaySizeService, private dialog: MatDialog) { }
+    private bottomSheet: MatBottomSheet, private displaySize: DisplaySizeService, private dialog: MatDialog, private activeProject: ActiveProjectService) {
+      this.loadingContent = true;
+  }
 
   ngOnInit(): void {
+    this.activeProject.dashboardFetched.subscribe((val) => {
+      if (val == true) {
+        this.name = this.activeProject.name;
+        this.users = this.activeProject.users;
+        this.usersToShow = JSON.parse(JSON.stringify(this.users)).splice(0,2);
+        this.access = this.activeProject.access;
+        this.loadingContent = false;
+      }
+    })
   }
 
   navigate(direction: string) {

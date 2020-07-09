@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActiveProjectService } from '../../shared/_services/active-project.service';
 
 @Component({
   selector: 'app-users',
@@ -6,26 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  users = [
-    {
-      name: 'Vatsal Kandoi',
-      letter: 'V',
-      email: 'vatsalkandoi1998@gmail.com',
-      access: 'client'
-    }
-  ]
-  usersSearched = [
-    {
-      name: 'Vatsal Kandoi',
-      letter: 'V',
-      email: 'vatsalkandoi1998@gmail.com',
-      added: false,
-    }
-  ]
-  access = 'admin'
-  constructor() { }
+  users: any[]
+  usersSearched: any[];
+  access: string;
+  constructor(private activeProject: ActiveProjectService ) {
+    this.usersSearched = []
+  }
 
   ngOnInit(): void {
+    this.access = this.activeProject.access;
+    this.users = this.activeProject.users;
+    this.activeProject.dashboardFetched.subscribe((val) => {
+      if (val) {
+        this.users = this.activeProject.users;
+        this.access = this.activeProject.access;
+      }
+    })
   }
   addAs(role) {
 
