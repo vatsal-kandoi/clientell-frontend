@@ -18,7 +18,8 @@ export class ActiveProjectService {
 
   dashboardFetched: Subject<boolean>;
   usersUpdated: Subject<boolean>;
-
+  featuresUpdated: Subject<boolean>;
+  issuesUpdated: Subject<boolean>;
   constructor(private projectsService: ProjectsService, private http: HttpClient, private url: UrlService) {
     this.activeProjectID = this.projectsService.activeProjectID;    
     this.fetchProjectDashboard();
@@ -28,6 +29,8 @@ export class ActiveProjectService {
     });
     this.dashboardFetched = new Subject();
     this.usersUpdated = new Subject();
+    this.featuresUpdated = new Subject();
+    this.issuesUpdated = new Subject();
   }
 
   removeUser(email: string) {
@@ -53,6 +56,45 @@ export class ActiveProjectService {
     this.usersUpdated.next(true);
   }
 
+  addFeature(description: string, dueDate: Date) {
+    this.http.post(this.url.addFeatureToProjectUrl, {'description': description, 'deadline': new Date(dueDate), 'projectId': this.activeProjectID}).subscribe((val: any) => {
+      if (val.code == 200) {
+        this.features.push({
+          _id: val.id,
+          accepted: {value: false, by: null},
+          completed: {value: false, by: null},
+          deadline: new Date(dueDate),
+          description,
+          status: 'incomplete',
+        })
+
+        this.featuresUpdated.next(true);
+      }
+    });
+  }
+
+  removeFeature(id) {
+    this.http.post(this.url.removeFeatureToProjectUrl, {'featureId': id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
+      if (val.code == 200) {
+        let temp = [];
+        this.features.forEach((element) => {
+          if (element._id != id) {
+            temp.push(element);
+          }
+        })
+        this.features = JSON.parse(JSON.stringify(temp));
+        this.featuresUpdated.next(true);
+      }
+    });
+  }
+
+  addIssue(description: string) {
+
+  }
+
+  removeIssue(id) {
+
+  }
 
   fetchProjectDashboard() {
     return this.http.post(this.url.allProjectsUrl, {'projectId': this.activeProjectID}).subscribe((val: any) => {
@@ -65,7 +107,7 @@ export class ActiveProjectService {
         this.users = val.users;
         this.dashboardFetched.next(true);
       }
-
+      console.log(val);
     });
   }
 }

@@ -16,7 +16,7 @@
         <div>
             <mat-form-field color="accent" *ngIf="showCalender" appearance="fill">
                 <mat-label>Choose a due date</mat-label>
-                <input matInput [matDatepicker]="picker">
+                <input [formControl]="dueDate" matInput [matDatepicker]="picker">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>

@@ -10,7 +10,7 @@
         <li *ngFor="let feature of features; let index = index">
             <div class="row space-between">
                 <div>
-                    <mat-checkbox checked="{{feature.completed}}" disabled="{{access != 'developer'}}">
+                    <mat-checkbox [checked]="feature.completed.value" disabled="{{access != 'developer'}}">
                         {{ feature.description }}
                     </mat-checkbox>
                 </div>
@@ -21,7 +21,7 @@
                     <button *ngIf="access == 'client'" mat-icon-button color="accent">
                         <mat-icon>done_all</mat-icon>
                     </button>
-                    <button *ngIf="access == 'admin'" mat-icon-button color="error">
+                    <button (click)="delete(feature._id)" *ngIf="access == 'admin'" mat-icon-button color="error">
                         <mat-icon>delete_outline</mat-icon>
                     </button>
                 </div>

@@ -1,7 +1,7 @@
 <h3>Add to agenda</h3>
 <div>
     <mat-radio-group (change)="toggle()" [formControl]="type" aria-label="Select an option">
-        <mat-radio-button [(ngModel)]="showCalender" value="feature" class="margin-right">Project Feature</mat-radio-button>
+        <mat-radio-button value="feature" class="margin-right">Project Feature</mat-radio-button>
         <mat-radio-button value="issue">Project Issue</mat-radio-button>
     </mat-radio-group>
 </div>
@@ -14,7 +14,7 @@
 <div>
     <mat-form-field color="accent" *ngIf="showCalender" appearance="fill">
         <mat-label>Choose a due date</mat-label>
-        <input matInput [matDatepicker]="picker">
+        <input [formControl]="dueDate" matInput [matDatepicker]="picker">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>

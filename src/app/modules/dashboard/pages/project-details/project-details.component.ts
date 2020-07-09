@@ -26,7 +26,21 @@ export class ProjectDetailsComponent implements OnInit {
         this.issues = this.activeProject.issues;
         this.links = this.activeProject.links;
       }
-    })
+    });
+    this.activeProject.featuresUpdated.subscribe((val) => {
+      if (val) {
+        this.features = this.activeProject.features;
+      }
+    });
+    this.activeProject.issuesUpdated.subscribe((val) => {
+      if (val) {
+        this.issues = this.activeProject.issues;
+      }
+    });
+  }
+
+  delete(id: string) {
+    this.activeProject.removeFeature(id);
   }
 
 }
