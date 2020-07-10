@@ -12,7 +12,9 @@ export class ProjectDetailsComponent implements OnInit {
   links: any[]
   access: string;
   features: any[]
-  issues: any[]
+  issues: any[];
+  closed: any;
+
   constructor(private activeProject: ActiveProjectService, private commentService: CommentService,
     private router: Router ) {
   }
@@ -22,12 +24,15 @@ export class ProjectDetailsComponent implements OnInit {
     this.features = this.activeProject.features;
     this.issues = this.activeProject.issues;
     this.links = this.activeProject.links;
+    this.closed = this.activeProject.closed;
+
     this.activeProject.dashboardFetched.subscribe((val) => {
       if (val) {
         this.access = this.activeProject.access;
         this.features = this.activeProject.features;
         this.issues = this.activeProject.issues;
         this.links = this.activeProject.links;
+        this.closed = this.activeProject.closed;
       }
     });
     this.activeProject.featuresUpdated.subscribe((val) => {
@@ -72,7 +77,6 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   toggleFeatureStatus(id, status) {
-    console.log(status, '1');
     this.activeProject.acceptFeature(id, !status);
   }
 

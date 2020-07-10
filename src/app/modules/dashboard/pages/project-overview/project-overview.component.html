@@ -1,5 +1,5 @@
-<div *ngIf="loadingContent">
-
+<div class="row loader" *ngIf="loadingContent">
+    <mat-spinner diameter="50"></mat-spinner>
 </div>
 <div *ngIf="!loadingContent">
     <div class="row space-between">

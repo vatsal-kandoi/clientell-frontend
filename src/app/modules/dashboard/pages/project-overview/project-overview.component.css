@@ -12,6 +12,11 @@
 .font{
     font-size: 1.5rem;
 }
+.loader{
+    width: 100%;
+    justify-content: center;
+    margin-top: 30px;
+}
 .access{
     margin-left: 10px; padding: 5px 15px; background-color: rgba(255,255,255,0.07); border-radius: 10px;
 }

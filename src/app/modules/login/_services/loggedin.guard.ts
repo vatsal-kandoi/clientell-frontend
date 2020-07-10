@@ -3,19 +3,11 @@ import { Router, CanActivate, CanActivateChild } from '@angular/router';
 import { TokenService } from './token.service';
 
 @Injectable()
-export class AuthGuardService implements CanActivate, CanActivateChild {
+export class LoggedinGuardService implements CanActivate {
   constructor(public auth: TokenService, public router: Router, private token: TokenService) {}
   canActivate(): boolean {
-    if (!this.auth.isAuthenticated()) {
-      this.router.navigate(['/auth/login']);
-      return false;
-    }
-    return true;
-  }
-  canActivateChild() {
-    if (!this.auth.isAuthenticated()) {
-      this.token.deleteTokens();
-      this.router.navigate(['/auth/login']);
+    if (this.auth.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
       return false;
     }
     return true;

@@ -43,19 +43,31 @@ export class LoginService {
   }
   login(email, password) {
     this.http.post(this.url.loginUrl, {email, password}).subscribe((data: AuthFetchedResponse) => {
+      console.log(data);
       if (data.success == true) {
         this.token.setTokens(data.access_token, data.refresh_token);
         this.router.navigate(['/dashboard']);
       } else {
-        this.error.next(data.message);
-        setTimeout(() => {
-          this.error.next('');
-        }, 4000);
+        if (data.code == 404) {
+          this.error.next('Email and password combination is incorrect.');
+          setTimeout(() => {
+            this.error.next('');
+          }, 4000);
+        } else {
+          this.error.next('Something bad happened. Please try again');
+          setTimeout(() => {
+            this.error.next('');
+          }, 4000);
+        }
       }
     });
   }
   logout() {
     this.token.deleteTokens();
     this.router.navigate(['/auth/login']);
+  }
+
+  isLoggedIn() {
+    return this.token.isAuthenticated();
   }
 }

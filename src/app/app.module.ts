@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './modules/login/_interceptors/token.interceptor';
 import { AuthGuardService } from './modules/login/_services/auth.guard';
-
+import {LoggedinGuardService} from './modules/login/_services/loggedin.guard';
 @NgModule({
   declarations: [
     AppComponent
@@ -20,6 +20,7 @@ import { AuthGuardService } from './modules/login/_services/auth.guard';
   ],
   providers: [
     AuthGuardService,
+    LoggedinGuardService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

@@ -180,7 +180,7 @@ export class ActiveProjectService {
     }
   }
   fetchProjectDashboard() {
-    return this.http.post(this.url.allProjectsUrl, {'projectId': this.activeProjectID}).subscribe((val: any) => {
+    this.http.post(this.url.allProjectsUrl, {'projectId': this.activeProjectID}).subscribe((val: any) => {
       if (val.code == 200) {
         this.access = val.access;
         this.name = val.name;

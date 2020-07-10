@@ -1,43 +1,45 @@
 <div>
-    <h3>Add a user</h3>
+    <ng-container *ngIf="access == 'admin'">
+        <h3>Add a user</h3>
 
-    <div class="users">
-        <div class="input">
-            <input [formControl]="userQuery" placeholder="Enter name or email">
-            <div (click)="search()" class="icon">
-                <mat-icon>search</mat-icon>
+        <div class="users">
+            <div class="input">
+                <input [formControl]="userQuery" placeholder="Enter name or email">
+                <div (click)="search()" class="icon">
+                    <mat-icon>search</mat-icon>
+                </div>
             </div>
+            <li *ngFor="let user of usersSearched; let index= index">
+                <div class="row space-between">
+                    <div class="row center">
+                        <div class="user-img">
+                            {{user.name[0]}}
+                        </div>
+                        <div>
+                            <div class="name">{{user.name}}</div>
+                            <div class="email">{{user.email}}</div>
+                        </div>
+                    </div>
+                    <div class="row center" *ngIf="user.added == false">
+                        <button [matMenuTriggerFor]="menu" mat-icon-button color="accent">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button (click)="addAs('client', user.name, user.email)" mat-menu-item>Client</button>
+                            <button (click)="addAs('developer',user.name, user.email)" mat-menu-item>Developer</button>
+                            <button (click)="addAs('admin',user.name, user.email)" mat-menu-item>Admin</button>
+                        </mat-menu>
+                    </div>
+                    <div class="row center" *ngIf="user.added == true">
+                        <span class="status">
+                            {{user.access}}
+                        </span>
+                    </div>
+                </div>
+                <mat-divider *ngIf="index != usersSearched.length - 1"></mat-divider>
+            </li>
         </div>
-        <li *ngFor="let user of usersSearched; let index= index">
-            <div class="row space-between">
-                <div class="row center">
-                    <div class="user-img">
-                        {{user.name[0]}}
-                    </div>
-                    <div>
-                        <div class="name">{{user.name}}</div>
-                        <div class="email">{{user.email}}</div>
-                    </div>
-                </div>
-                <div class="row center" *ngIf="user.added == false">
-                    <button [matMenuTriggerFor]="menu" mat-icon-button color="accent">
-                        <mat-icon>add</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                        <button (click)="addAs('client', user.name, user.email)" mat-menu-item>Client</button>
-                        <button (click)="addAs('developer',user.name, user.email)" mat-menu-item>Developer</button>
-                        <button (click)="addAs('admin',user.name, user.email)" mat-menu-item>Admin</button>
-                    </mat-menu>
-                </div>
-                <div class="row center" *ngIf="user.added == true">
-                    <span class="status">
-                        {{user.access}}
-                    </span>
-                </div>
-            </div>
-            <mat-divider *ngIf="index != usersSearched.length - 1"></mat-divider>
-        </li>
-    </div>
+    </ng-container>
     <h3>Project members</h3>
     <div class="users">
         <li *ngFor="let user of users; let index= index">

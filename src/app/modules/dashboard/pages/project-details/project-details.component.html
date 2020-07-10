@@ -19,12 +19,12 @@
         <li *ngIf="features.length == 0">No features to show</li>
         <li *ngFor="let feature of features; let index = index">
             <div class="row space-between">
-                <div>
-                    <mat-checkbox (click)="toggleStatus('feature', feature._id, feature.completed.value)" [checked]="feature.completed.value" disabled="{{access != 'developer'}}">
-                        {{ feature.description }}
+                <div class="row max-width-60 align-center">
+                    <mat-checkbox class="margin-right" (click)="toggleStatus('feature', feature._id, feature.completed.value)" [checked]="feature.completed.value" disabled="{{access != 'developer'}}">
                     </mat-checkbox>
+                    {{ feature.description }}
                 </div>
-                <div class="row align-center">
+                <div class="row align-center max-width-40">
                     <span class="status" [ngClass]="{'completed': feature.completed.value}">
                         <ng-container *ngIf="feature.completed.value && feature.accepted.value">
                             Accepted
@@ -43,7 +43,7 @@
                         <mat-icon *ngIf="!feature.accepted.value">done_all</mat-icon>
                         <mat-icon *ngIf="feature.accepted.value">close</mat-icon>
                     </button>
-                    <button (click)="delete('feature',feature._id)" *ngIf="access == 'admin'" mat-icon-button color="error">
+                    <button (click)="delete('feature',feature._id)" *ngIf="access == 'admin' && (!closed.admin.value && !closed.client.value)" mat-icon-button color="error">
                         <mat-icon>delete_outline</mat-icon>
                     </button>
                 </div>
@@ -55,13 +55,13 @@
     <div class="padding">
         <li *ngIf="issues.length == 0">No issues to show</li>
         <li *ngFor="let issue of issues; let index = index">
-            <div class="row space-between">
-                <div>
-                    <mat-checkbox (click)="toggleStatus('issue', issue._id, issue.closed.value)" [checked]="issue.closed.value" disabled="{{access != 'developer'}}">
-                        {{ issue.description }}
+            <div class="issue row space-between">
+                <div class="row max-width-60 align-center">
+                    <mat-checkbox class="margin-right" (click)="toggleStatus('issue', issue._id, issue.closed.value)" [checked]="issue.closed.value" disabled="{{access != 'developer'}}">
                     </mat-checkbox>
+                    {{ issue.description }}
                 </div>
-                <div class="row align-center">
+                <div class="row align-center max-width-40">
                     <span class="status" [ngClass]="{'completed': issue.closed.value}">
                         <ng-container *ngIf="issue.closed.value && issue.accepted.value">
                             Approved
@@ -82,7 +82,7 @@
                     <button (click)="rejectIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && issue.accepted.value && issue.closed.value"  mat-icon-button color="accent">
                         <mat-icon>close</mat-icon>
                     </button>
-                    <button (click)="delete('issue', issue._id)" *ngIf="access == 'client' || access == 'admin'" mat-icon-button color="error">
+                    <button (click)="delete('issue', issue._id)" *ngIf="(access == 'client' || access == 'admin') && (!closed.admin.value && !closed.client.value)" mat-icon-button color="error">
                         <mat-icon>delete_outline</mat-icon>
                     </button>
                 </div>
