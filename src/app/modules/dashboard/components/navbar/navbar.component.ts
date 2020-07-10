@@ -7,7 +7,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddProjectDesktopComponent } from '../add-project/add-project-desktop/add-project-desktop.component';
 import { AddProjectMobileComponent } from '../add-project/add-project-mobile/add-project-mobile.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { UserdataService } from 'src/app/modules/login/_services/userdata.service';
 
 @Component({
   selector: 'navbar',
@@ -21,15 +20,15 @@ export class NavbarComponent implements OnInit {
   name: string;
   
   showProject = false;
-  constructor(private projectsService: ProjectsService, private bottomSheet: MatBottomSheet, private router: Router, private displaySize: DisplaySizeService, private dialog: MatDialog, private user: UserdataService) {
+  constructor(private projectsService: ProjectsService, private bottomSheet: MatBottomSheet, private router: Router, private displaySize: DisplaySizeService, private dialog: MatDialog) {
     this.projectName = new FormControl('');
   }
 
   ngOnInit(): void {
-    this.name = this.user.name.split(" ")[0];
     if (this.projectsService.projects == undefined) this.projectsService.fetchAllProjects();
     else {
       this.projects = this.projectsService.projects;
+      this.name = this.projectsService.userName;
       this.projectsToShow = JSON.parse(JSON.stringify(this.projects)).splice(0,5);
       this.showProject = true;
     }
@@ -37,6 +36,7 @@ export class NavbarComponent implements OnInit {
     this.projectsService.projectFetched.subscribe((val) => {
       if (val == true) {
         this.projects = this.projectsService.projects;
+        this.name = this.projectsService.userName;
         this.projectsToShow = JSON.parse(JSON.stringify(this.projects)).splice(0,5);
         this.showProject = true;
       }

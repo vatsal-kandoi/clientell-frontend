@@ -43,7 +43,7 @@
         </div>
     </div>
     <div class="margin">
-        Added on {{addedOn}}
+        Added on {{addedOn | date}}
     </div>
     <div class="padding">
         <li *ngIf="comments.length == 0">
@@ -67,7 +67,7 @@
                         {{comment.by.name}}
                     </div>
                     <div>
-                        {{comment.createdAt}}
+                        {{comment.createdAt | date}}
                     </div>
                 </div>
             </div>

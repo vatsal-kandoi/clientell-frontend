@@ -13,6 +13,9 @@ export class ProjectsService {
   activeProject: Subject<string>;
   activeProjectID: string;
   projects: any[];
+  
+  userName: string;
+  userEmail: any;
 
   constructor(private http: HttpClient, private url: UrlService) {
     this.projectAdded = new Subject();
@@ -69,6 +72,8 @@ export class ProjectsService {
         val.projects.forEach(element => {
           this.projects.push({...element, letter: element.name[0]});
         });
+        this.userName = val.name;
+        this.userEmail = val.email;
         this.projectFetched.next(true);
       }
     });

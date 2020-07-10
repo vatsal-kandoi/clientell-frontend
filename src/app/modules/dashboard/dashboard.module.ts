@@ -38,10 +38,11 @@ import { AddItemDesktopComponent } from './components/add-item/add-item-desktop/
 import {MatRadioModule} from '@angular/material/radio';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { DatePipe } from './shared/_pipes/date.pipe';
 
 
 @NgModule({
-  declarations: [DashboardComponent, HomeComponent, UserComponent, NavbarComponent, ProjectDetailsComponent, CommentsComponent, ProjectItemComponent, AddUserComponent, UsersComponent, LogoutComponent, ProjectNavbarComponent, AllProjectsComponent, AddProjectMobileComponent, AddProjectDesktopComponent, ProjectOverviewComponent, AddItemMobileComponent, AddItemDesktopComponent],
+  declarations: [DashboardComponent, HomeComponent, UserComponent, NavbarComponent, ProjectDetailsComponent, CommentsComponent, ProjectItemComponent, AddUserComponent, UsersComponent, LogoutComponent, ProjectNavbarComponent, AllProjectsComponent, AddProjectMobileComponent, AddProjectDesktopComponent, ProjectOverviewComponent, AddItemMobileComponent, AddItemDesktopComponent, DatePipe],
   imports: [
     CommonModule,
     DashboardRoutingModule,

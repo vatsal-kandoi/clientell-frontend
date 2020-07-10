@@ -5,6 +5,7 @@ import { UrlService } from 'src/app/shared/_services/url.service';
 import { Subject } from 'rxjs';
 import { UserService } from './user.service';
 import { UserdataService } from 'src/app/modules/login/_services/userdata.service';
+import { ProjectsService } from './projects.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class CommentService {
 
   data: any;
 
-  constructor(private http: HttpClient, private url: UrlService, private activeProject: ActiveProjectService, private user: UserdataService) {
+  constructor(private http: HttpClient, private url: UrlService, private activeProject: ActiveProjectService, private allProjects: ProjectsService, ) {
     this.commentsFetched = new Subject();
   }
 
@@ -45,8 +46,8 @@ export class CommentService {
       if (val.code == 200) {
         this.data.comments.push({
           by: {
-            name: this.user.name,
-            email: this.user.email,
+            name: this.allProjects.userName,
+            email: this.allProjects.userEmail,
           },
           createdAt: new Date(),
           description: comment,
