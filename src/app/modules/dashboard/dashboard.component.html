@@ -9,9 +9,12 @@
     </div>
 
     <div class="right">
-        <span class="icon" (click)="toggle()" *ngIf="displayType == 'mobile'">
-            <mat-icon aria-hidden="false" class="icon" aria-label="Menu icon>">menu</mat-icon>
-        </span>
+        <mat-toolbar class="top row center"  *ngIf="displayType == 'mobile'">
+            <span class="icon" (click)="toggle()">
+                <mat-icon aria-hidden="false" class="icon" aria-label="Menu icon>">menu</mat-icon>
+            </span>
+        </mat-toolbar>
+
         <router-outlet></router-outlet>
     </div>
 </div>

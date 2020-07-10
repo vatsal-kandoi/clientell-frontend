@@ -3,8 +3,6 @@ import { ActiveProjectService } from './active-project.service';
 import { HttpClient } from '@angular/common/http';
 import { UrlService } from 'src/app/shared/_services/url.service';
 import { Subject } from 'rxjs';
-import { UserService } from './user.service';
-import { UserdataService } from 'src/app/modules/login/_services/userdata.service';
 import { ProjectsService } from './projects.service';
 
 @Injectable({

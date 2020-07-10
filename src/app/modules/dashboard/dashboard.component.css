@@ -7,6 +7,9 @@
     background-color: var(--surface);
     color: var(--text-alt);
 }
+.center {
+    align-items: center;
+}
 .left{
     width: 45%; height: 100%;
     overflow-y: auto;
@@ -40,6 +43,9 @@ logout {
     .right{
         width: 100%;
     }
+    .background{
+        padding-top: 50px;
+    }
     .left {
         position: fixed;
         background-color: var(--surface);
@@ -49,12 +55,22 @@ logout {
         transition: all 0.5s ease-out;
     }
 }
+@media only screen and (max-width: 350px) {
+    .left {
+        left: -100%;
+        width: 100%;
+    }
+}
 .show {
     left: 0px;
 }
 .left .icon {
-    display: fixed; top: 10px; left: 10px
+    position: absolute; top: 10px; left: 10px
 }
 .right .icon {
-    display: absolute !important; top: 10px; left: 10px
+    
+}
+.top {
+    background-color: var(--surface);
+    position: fixed; top: 0px; left: 0px; width: 100%; height: 50px;
 }

@@ -11,6 +11,10 @@ export class TokenService {
   constructor(private cookie: CookieService) {
     this.accessToken = '';
     this.refreshToken = '';
+    this.fetchTokens();
+  }
+
+  fetchTokens() {
     if (this.cookie.get('ClientellToken') != undefined || this.cookie.get('ClientellToken') != null) {
       try {
         let data = JSON.parse(this.cookie.get('ClientellToken'));
@@ -40,5 +44,12 @@ export class TokenService {
     this.accessToken = '';
     this.refreshToken = '';
     this.cookie.delete('ClientellToken');
+  }
+
+  isAuthenticated() {
+    if (this.accessToken != '' && this.accessToken != undefined) return true;
+    this.fetchTokens();
+    if (this.accessToken != '' && this.accessToken != undefined) return true;
+    return false;
   }
 }

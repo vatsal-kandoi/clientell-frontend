@@ -39,7 +39,8 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DatePipe } from './shared/_pipes/date.pipe';
-
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { AuthGuardService } from '../login/_services/auth.guard';
 
 @NgModule({
   declarations: [DashboardComponent, HomeComponent, UserComponent, NavbarComponent, ProjectDetailsComponent, CommentsComponent, ProjectItemComponent, AddUserComponent, UsersComponent, LogoutComponent, ProjectNavbarComponent, AllProjectsComponent, AddProjectMobileComponent, AddProjectDesktopComponent, ProjectOverviewComponent, AddItemMobileComponent, AddItemDesktopComponent, DatePipe],
@@ -49,6 +50,7 @@ import { DatePipe } from './shared/_pipes/date.pipe';
     MatIconModule,
     MatNativeDateModule,
     MatButtonModule,
+    MatToolbarModule,
     MatDatepickerModule,
     MatDividerModule,
     MatDialogModule,
@@ -63,6 +65,9 @@ import { DatePipe } from './shared/_pipes/date.pipe';
     MatRadioModule
   ],
   providers: [
+    AuthGuardService,
+    LoginService,
+    TokenService
   ]
 })
 export class DashboardModule { }

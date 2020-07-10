@@ -31,7 +31,7 @@ export class UrlService {
   incompleteIssueUrl: string;
   
   constructor() {
-    this.baseUrl = `http://localhost:3000/api`;
+    this.baseUrl = `/api`;
     this.signupUrl = `${this.baseUrl}/auth/signup`;
     this.loginUrl = `${this.baseUrl}/auth/login`;
     this.allProjectsUrl = `${this.baseUrl}/user/project`;

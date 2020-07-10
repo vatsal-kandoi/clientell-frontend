@@ -7,12 +7,14 @@ import { UsersComponent } from './pages/users/users.component';
 import { ProjectDetailsComponent } from './pages/project-details/project-details.component';
 import { AllProjectsComponent } from './pages/all-projects/all-projects.component';
 import { ProjectOverviewComponent } from './pages/project-overview/project-overview.component';
-
+import { 
+  AuthGuardService as AuthGuard } from '../login/_services/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: '',
