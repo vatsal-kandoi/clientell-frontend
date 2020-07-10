@@ -62,6 +62,8 @@ export class CommentService {
         console.log(val);
         this.data = {...val};
         this.commentsFetched.next(true);
+      } else {
+        this.commentsFetched.next(false);
       }
     })
   }

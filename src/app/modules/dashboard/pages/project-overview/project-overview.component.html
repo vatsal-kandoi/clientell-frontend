@@ -29,7 +29,7 @@
             </div>
 
             <div>
-                <button mat-button [matMenuTriggerFor]="menu">
+                <button [disableRipple]="true" mat-button [matMenuTriggerFor]="menu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">

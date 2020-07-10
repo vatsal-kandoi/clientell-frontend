@@ -22,10 +22,14 @@ export class ProjectOverviewComponent implements OnInit {
   closed: any;
 
   usersToShow: any[];
+  errorGettingParam: any;
+  showReload: boolean;
   constructor(private router: Router, private projectsService: ProjectsService,
     private bottomSheet: MatBottomSheet, private displaySize: DisplaySizeService, private dialog: MatDialog, private activeProject: ActiveProjectService, private route: ActivatedRoute
     ) {
       this.loadingContent = true;
+      this.errorGettingParam = false;
+      this.showReload = false;
   }
 
   ngOnInit(): void {
@@ -37,10 +41,14 @@ export class ProjectOverviewComponent implements OnInit {
         this.access = this.activeProject.access;
         this.closed = this.activeProject.closed;
         this.loadingContent = false;
-      } else {
+      } else if (!this.errorGettingParam) {
         const projectId: string = this.route.snapshot.queryParamMap.get('projectId');
         this.activeProject.activeProjectID = projectId;
         this.activeProject.fetchProjectDashboard();
+        this.errorGettingParam = true;
+      } else {
+        this.showReload = true;
+        this.router.navigate(['/dashboard']);
       }
     })
     this.activeProject.usersUpdated.subscribe((val) => {

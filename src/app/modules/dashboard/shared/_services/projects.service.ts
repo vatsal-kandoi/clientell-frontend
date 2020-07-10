@@ -2,6 +2,7 @@ import { Injectable, SkipSelf } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UrlService } from 'src/app/shared/_services/url.service';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class ProjectsService {
   userName: string;
   userEmail: any;
 
-  constructor(private http: HttpClient, private url: UrlService) {
+  constructor(private http: HttpClient, private url: UrlService, private router: Router) {
     this.projectAdded = new Subject();
     this.activeProject = new Subject();
     this.projectFetched = new Subject();
@@ -61,6 +62,9 @@ export class ProjectsService {
           _id: val.id
         });
         this.projectAdded.next(true);
+        this.activeProjectID = val.id;
+        this.activeProject.next(this.activeProjectID);
+        this.router.navigate(['/dashboard/project'], {queryParams: {projectId: this.activeProjectID}});
       }
     });
   }

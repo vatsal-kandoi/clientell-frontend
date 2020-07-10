@@ -29,9 +29,11 @@ export class UrlService {
   completeIssueUrl: string;
   issueIssueUrl: string;
   incompleteIssueUrl: string;
+  markFeatureCompleteUrl: string;
+  acceptFeatureUrl: string;
   
   constructor() {
-    this.baseUrl = `/api`;
+    this.baseUrl = `http://localhost:3000/api`;
     this.signupUrl = `${this.baseUrl}/auth/signup`;
     this.loginUrl = `${this.baseUrl}/auth/login`;
     this.allProjectsUrl = `${this.baseUrl}/user/project`;
@@ -56,5 +58,8 @@ export class UrlService {
     this.rejectIssueUrl = `${this.baseUrl}/project/issue/reject`;
     this.completeIssueUrl = `${this.baseUrl}/project/issue/close`;
     this.incompleteIssueUrl = `${this.baseUrl}/project/issue/open`;
+
+    this.markFeatureCompleteUrl = `${this.baseUrl}/project/feature/complete`;
+    this.acceptFeatureUrl = `${this.baseUrl}/project/feature/accept`
   }
 }

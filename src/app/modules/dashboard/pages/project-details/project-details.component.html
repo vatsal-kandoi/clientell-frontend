@@ -20,19 +20,28 @@
         <li *ngFor="let feature of features; let index = index">
             <div class="row space-between">
                 <div>
-                    <mat-checkbox [checked]="feature.completed.value" disabled="{{access != 'developer'}}">
+                    <mat-checkbox (click)="toggleStatus('feature', feature._id, feature.completed.value)" [checked]="feature.completed.value" disabled="{{access != 'developer'}}">
                         {{ feature.description }}
                     </mat-checkbox>
                 </div>
                 <div class="row align-center">
-                    <span class="status" [ngClass]="{'completed': feature.status == 'Completed'}">
-                        {{ feature.status }}
+                    <span class="status" [ngClass]="{'completed': feature.completed.value}">
+                        <ng-container *ngIf="feature.completed.value && feature.accepted.value">
+                            Accepted
+                        </ng-container>
+                        <ng-container *ngIf="feature.completed.value && !feature.accepted.value">
+                            Completed
+                        </ng-container>
+                        <ng-container *ngIf="!feature.completed.value">
+                            Incomplete
+                        </ng-container>
                     </span>
                     <button (click)="comment('feature', feature._id)" mat-icon-button color="accent">
                         <mat-icon>comment</mat-icon>
                     </button>
-                    <button *ngIf="access == 'client'" mat-icon-button color="accent">
-                        <mat-icon>done_all</mat-icon>
+                    <button *ngIf="access == 'client'" (click)="toggleFeatureStatus(feature._id, feature.accepted.value)" mat-icon-button color="accent">
+                        <mat-icon *ngIf="!feature.accepted.value">done_all</mat-icon>
+                        <mat-icon *ngIf="feature.accepted.value">close</mat-icon>
                     </button>
                     <button (click)="delete('feature',feature._id)" *ngIf="access == 'admin'" mat-icon-button color="error">
                         <mat-icon>delete_outline</mat-icon>
@@ -48,26 +57,29 @@
         <li *ngFor="let issue of issues; let index = index">
             <div class="row space-between">
                 <div>
-                    <mat-checkbox [checked]="issue.closed.value" disabled="{{access != 'developer'}}">
+                    <mat-checkbox (click)="toggleStatus('issue', issue._id, issue.closed.value)" [checked]="issue.closed.value" disabled="{{access != 'developer'}}">
                         {{ issue.description }}
                     </mat-checkbox>
                 </div>
                 <div class="row align-center">
                     <span class="status" [ngClass]="{'completed': issue.closed.value}">
+                        <ng-container *ngIf="issue.closed.value && issue.accepted.value">
+                            Approved
+                        </ng-container>
+                        <ng-container *ngIf="issue.closed.value && !issue.accepted.value">
+                            Closed
+                        </ng-container>
                         <ng-container *ngIf="!issue.closed.value">
                             Open
-                        </ng-container>
-                        <ng-container *ngIf="issue.closed.value">
-                            Closed
                         </ng-container>
                     </span>
                     <button (click)="comment('issue', issue._id)" mat-icon-button color="accent">
                         <mat-icon>comment</mat-icon>
                     </button>
-                    <button (click)="acceptIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && !issue.accepted.value" mat-icon-button color="accent">
+                    <button (click)="acceptIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && !issue.accepted.value && issue.closed.value" mat-icon-button color="accent">
                         <mat-icon>done_all</mat-icon>
                     </button>
-                    <button (click)="rejectIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && issue.accepted.value"  mat-icon-button color="accent">
+                    <button (click)="rejectIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && issue.accepted.value && issue.closed.value"  mat-icon-button color="accent">
                         <mat-icon>close</mat-icon>
                     </button>
                     <button (click)="delete('issue', issue._id)" *ngIf="access == 'client' || access == 'admin'" mat-icon-button color="error">

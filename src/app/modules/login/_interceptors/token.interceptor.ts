@@ -5,7 +5,6 @@ import {
   HttpEvent,
   HttpInterceptor,
   HttpResponse,
-  HttpErrorResponse
 } from '@angular/common/http';
 import { catchError, retry } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
@@ -21,7 +20,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler):  Observable<HttpEvent<any>> {
     if (request.url.includes('/auth/login') || request.url.includes('/auth/signup')) {
-      return next.handle(request).pipe(retry(3),catchError(this.handleError));      
+      return next.handle(request).pipe(catchError(this.handleError));      
     }
     let token = (this.accessTokenFailed) ? this.token.getRefeshToken() : this.token.getAccessToken();
     request = request.clone({

@@ -215,4 +215,65 @@ export class ActiveProjectService {
       }
     })
   }
+
+  acceptFeature(id, status) {
+    this.http.post(this.url.acceptFeatureUrl, {'status': status, 'projectId': this.activeProjectID, 'featureId': id}).subscribe((val: any) => {
+      if (val.code == 200) {
+        this.features.forEach((element) => {
+          if (element._id == id) {
+            element.accepted.value = status;
+          }
+        });
+        this.featuresUpdated.next(true);
+      } else {
+
+      }
+    })    
+  }
+
+  markCompleteFeature(id, status) {
+    this.http.post(this.url.markFeatureCompleteUrl, {'status': status, 'projectId': this.activeProjectID, 'featureId': id}).subscribe((val: any) => {
+      if (val.code == 200) {
+        this.features.forEach((element) => {
+          if (element._id == id) {
+            element.completed.value = status;
+          }
+        });
+        this.featuresUpdated.next(true);
+      } else {
+
+      }
+    })
+  }
+
+  closeIssue(id, status) {
+    if (status) {
+      this.http.post(this.url.completeIssueUrl, {'projectId': this.activeProjectID, 'issueId': id}).subscribe((val: any) => {
+        if (val.code == 200) {
+          this.issues.forEach((element) => {
+            if (element._id == id) {
+              element.closed.value = status;
+            }
+          });
+          this.issuesUpdated.next(true);
+        } else {
+
+        }
+      });
+    } else {
+      this.http.post(this.url.incompleteIssueUrl, {'projectId': this.activeProjectID, 'issueId': id}).subscribe((val: any) => {
+        if (val.code == 200) {
+          this.issues.forEach((element) => {
+            if (element._id == id) {
+              element.closed.value = status;
+            }
+          });
+          this.issuesUpdated.next(true);
+        } else {
+
+        }
+      })      
+    }
+
+  }
 }

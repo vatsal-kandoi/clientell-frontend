@@ -70,4 +70,17 @@ export class ProjectDetailsComponent implements OnInit {
   rejectIssue(id) {
     this.activeProject.changeStatusIssue('reject', id);
   }
+
+  toggleFeatureStatus(id, status) {
+    console.log(status, '1');
+    this.activeProject.acceptFeature(id, !status);
+  }
+
+  toggleStatus(type: string, id: string, current: boolean) {
+    if (type == 'feature') {
+      this.activeProject.markCompleteFeature(id, !current);
+    } else {
+      this.activeProject.closeIssue(id, !current)
+    }
+  }
 }

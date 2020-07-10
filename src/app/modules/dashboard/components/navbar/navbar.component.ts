@@ -28,7 +28,7 @@ export class NavbarComponent implements OnInit {
     if (this.projectsService.projects == undefined) this.projectsService.fetchAllProjects();
     else {
       this.projects = this.projectsService.projects;
-      this.name = this.projectsService.userName;
+      this.name = this.projectsService.userName.split(" ")[0];
       this.projectsToShow = JSON.parse(JSON.stringify(this.projects)).splice(0,5);
       this.showProject = true;
     }
@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit {
     this.projectsService.projectFetched.subscribe((val) => {
       if (val == true) {
         this.projects = this.projectsService.projects;
-        this.name = this.projectsService.userName;
+        this.name = this.projectsService.userName.split(" ")[0];
         this.projectsToShow = JSON.parse(JSON.stringify(this.projects)).splice(0,5);
         this.showProject = true;
       }
