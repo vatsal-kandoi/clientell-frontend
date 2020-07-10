@@ -1,21 +1,23 @@
-<div class="row space-between">
-    <div><h2>All projects ({{projects.length}})</h2></div>
-    <div><button (click)="addProject()" mat-raised-button color="primary">Add project</button></div>
-</div>
-
-<div *ngFor="let project of projects; let index = index">
-    <div (click)="openProject(project._id)" class="project row" >
-        <div>
-            {{ project.name }}
-        </div>
-        <div class="status" [ngClass]="{'active': project.active, 'inactive':!project.active}">
-            <ng-container *ngIf="project.active">
-                Active
-            </ng-container>
-            <ng-container *ngIf="!project.active">
-                Inactive
-            </ng-container>
-        </div>
+<ng-container *ngIf="isLoaded">
+    <div class="row space-between">
+        <div><h2>All projects ({{projects.length}})</h2></div>
+        <div><button (click)="addProject()" mat-raised-button color="primary">Add project</button></div>
     </div>
-    <mat-divider *ngIf="index != projects.length - 1"></mat-divider>
-</div>
+    
+    <div *ngFor="let project of projects; let index = index">
+        <div (click)="openProject(project._id)" class="project row" >
+            <div>
+                {{ project.name }}
+            </div>
+            <div class="status" [ngClass]="{'active': project.active, 'inactive':!project.active}">
+                <ng-container *ngIf="project.active">
+                    Active
+                </ng-container>
+                <ng-container *ngIf="!project.active">
+                    Inactive
+                </ng-container>
+            </div>
+        </div>
+        <mat-divider *ngIf="index != projects.length - 1"></mat-divider>
+    </div>    
+</ng-container>

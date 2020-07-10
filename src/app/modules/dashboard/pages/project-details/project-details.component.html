@@ -1,6 +1,7 @@
 <div>
     <h3>Project links</h3>
     <div class="padding">
+        <li *ngIf="links.length == 0">No links to show</li>
         <li *ngFor="let link of links; let index = index">
             <div class="row space-between">
                 <div>
@@ -15,6 +16,7 @@
     </div>
     <h3>Project features</h3>
     <div class="padding">
+        <li *ngIf="features.length == 0">No features to show</li>
         <li *ngFor="let feature of features; let index = index">
             <div class="row space-between">
                 <div>
@@ -26,6 +28,9 @@
                     <span class="status" [ngClass]="{'completed': feature.status == 'Completed'}">
                         {{ feature.status }}
                     </span>
+                    <button (click)="comment('feature', feature._id)" mat-icon-button color="accent">
+                        <mat-icon>comment</mat-icon>
+                    </button>
                     <button *ngIf="access == 'client'" mat-icon-button color="accent">
                         <mat-icon>done_all</mat-icon>
                     </button>
@@ -39,6 +44,7 @@
     </div>
     <h3>Project issues</h3>
     <div class="padding">
+        <li *ngIf="issues.length == 0">No issues to show</li>
         <li *ngFor="let issue of issues; let index = index">
             <div class="row space-between">
                 <div>
@@ -55,8 +61,14 @@
                             Closed
                         </ng-container>
                     </span>
-                    <button *ngIf="access == 'client' || access == 'admin'" mat-icon-button color="accent">
+                    <button (click)="comment('issue', issue._id)" mat-icon-button color="accent">
+                        <mat-icon>comment</mat-icon>
+                    </button>
+                    <button (click)="acceptIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && !issue.accepted.value" mat-icon-button color="accent">
                         <mat-icon>done_all</mat-icon>
+                    </button>
+                    <button (click)="rejectIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && issue.accepted.value"  mat-icon-button color="accent">
+                        <mat-icon>close</mat-icon>
                     </button>
                     <button (click)="delete('issue', issue._id)" *ngIf="access == 'client' || access == 'admin'" mat-icon-button color="error">
                         <mat-icon>delete_outline</mat-icon>

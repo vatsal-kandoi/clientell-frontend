@@ -1,1 +1,76 @@
-<p>comments works!</p>
+<div *ngIf="isLoaded">
+    <div class="row align-space-between">
+        <div>
+            <h4>
+                {{description}}
+            </h4>
+        </div>
+        <div class="row center">
+            <span class="status" *ngIf="type == 'feature'" [ngClass]="{'green': accepted}">
+                <ng-container *ngIf="!completed">
+                    incomplete
+                </ng-container>
+                <ng-container *ngIf="completed">
+                    complete
+                </ng-container>
+            </span>
+            <span class="status" *ngIf="type == 'feature'" [ngClass]="{'green': accepted}">
+                <ng-container *ngIf="!accepted">
+                    not accepted
+                </ng-container>
+                <ng-container *ngIf="accepted">
+                    accepted
+                </ng-container>
+            </span>
+            <span class="status" *ngIf="type == 'issue'" [ngClass]="{'green': accepted}">
+                <ng-container *ngIf="!closed">
+                    open
+                </ng-container>
+                <ng-container *ngIf="closed">
+                    closed
+                </ng-container>
+            </span>
+        </div>
+    </div>
+    <div>
+        <div class="row center margin">
+            <div class="input">
+                <input [formControl]="userComment" placeholder="Enter your comment">
+            </div>
+            <div>
+                <button (click)="addComment()" mat-button color="accent">Add comment</button>
+            </div>
+        </div>
+    </div>
+    <div class="margin">
+        Added on {{addedOn}}
+    </div>
+    <div class="padding">
+        <li *ngIf="comments.length == 0">
+            No comments on this agenda
+        </li>
+        <li *ngFor="let comment of comments">
+            <div class="comment">
+                <span class="icon">
+                        <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="deleteComment(comment._id)" mat-menu-item>Delete</button>
+                    </mat-menu> 
+                </span>
+                <div>
+                    <p>
+                        {{comment.description}}
+                    </p>
+                </div>
+                <div class="row align-space-between">
+                    <div>
+                        {{comment.by.name}}
+                    </div>
+                    <div>
+                        {{comment.createdAt}}
+                    </div>
+                </div>
+            </div>
+        </li>
+    </div>
+</div>

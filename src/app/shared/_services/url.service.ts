@@ -12,13 +12,24 @@ export class UrlService {
   projectDashboardUrl: string;
   userSearchUrl: string;
   addUserToProjectUrl: string;
-  removeUserToProjectUrl: string;
+  removeUserToProjectUrl: string;0
   addFeatureToProjectUrl: string;
   removeFeatureToProjectUrl: string;
   removeIssueToProjectUrl: string;
   addIssueToProjectUrl: string;
   addLinkUrl: string;
   removeUrl: string;
+  getCommentsUrl: string;
+  addCommentsUrl: string;
+  deleteCommentsUrl: string;
+  closeProjectUrl: string;
+  deleteProjectUrl: string;
+  acceptIssueUrl: string;
+  rejectIssueUrl: string;
+  completeIssueUrl: string;
+  issueIssueUrl: string;
+  incompleteIssueUrl: string;
+  
   constructor() {
     this.baseUrl = `http://localhost:3000/api`;
     this.signupUrl = `${this.baseUrl}/auth/signup`;
@@ -35,5 +46,15 @@ export class UrlService {
     this.removeIssueToProjectUrl  = `${this.baseUrl}/project/issue/remove`
     this.addLinkUrl = `${this.baseUrl}/project/link/add`;
     this.removeUrl = `${this.baseUrl}/project/link/remove`;
+    this.getCommentsUrl = `${this.baseUrl}/user/comments`;
+    this.addCommentsUrl = `${this.baseUrl}/project/comment/add`;
+    this.deleteCommentsUrl = `${this.baseUrl}/project/comment/delete`;
+    this.closeProjectUrl = `${this.baseUrl}/project/close`;
+    this.deleteProjectUrl = `${this.baseUrl}/project/delete`;
+
+    this.acceptIssueUrl = `${this.baseUrl}/project/issue/accept`;
+    this.rejectIssueUrl = `${this.baseUrl}/project/issue/reject`;
+    this.completeIssueUrl = `${this.baseUrl}/project/issue/close`;
+    this.incompleteIssueUrl = `${this.baseUrl}/project/issue/open`;
   }
 }

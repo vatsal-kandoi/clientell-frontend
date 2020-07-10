@@ -14,24 +14,29 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 })
 export class AllProjectsComponent implements OnInit {
   projects: any[];
-
-  constructor(private projectsService: ProjectsService, private router: Router, private bottomSheet: MatBottomSheet ,private displaySize: DisplaySizeService, private dialog: MatDialog) { }
+  isLoaded: boolean;
+  constructor(private projectsService: ProjectsService, private router: Router, private bottomSheet: MatBottomSheet ,private displaySize: DisplaySizeService, private dialog: MatDialog) {
+    this.isLoaded = false;
+  }
 
   ngOnInit(): void {
     if (this.projectsService.projects == undefined) this.projectsService.fetchAllProjects();
     else {
       this.projects = this.projectsService.projects;
+      this.isLoaded = true;
     }
 
     this.projectsService.projectFetched.subscribe((val) => {
       if (val == true) {
         this.projects = this.projectsService.projects;
+        this.isLoaded = true;
       }
     });
 
     this.projectsService.projectAdded.subscribe((val) => {
       if (val == true) {
         this.projects = this.projectsService.projects;
+        this.isLoaded = true;
       } else {
 
       }

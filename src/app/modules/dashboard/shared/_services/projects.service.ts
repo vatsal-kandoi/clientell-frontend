@@ -24,6 +24,18 @@ export class ProjectsService {
     this.activeProjectID = id;
     this.activeProject.next(this.activeProjectID);
   }
+
+  removeProject(id) {
+    let temp = [];
+    this.projects.forEach((element) => {
+      if (element._id != id) {
+        temp.push(element);
+      } 
+    });
+    this.projects = JSON.parse(JSON.stringify(temp));
+    this.projectAdded.next(true);
+  }
+
   addProject(name: string) {
     this.http.post(this.url.addProjectUrl, {'name': name}).subscribe((val: any) => {
       if (val.code == 200) {

@@ -35,7 +35,10 @@
                 <mat-menu #menu="matMenu">
                     <button (click)="navigate('overview')" mat-menu-item>Project overview</button>
                     <button (click)="navigate('users')" mat-menu-item>Users list</button>
-                    <button (click)="addLink()" mat-menu-item>Add item</button>
+                    <button (click)="addLink()" [disabled]="closed.admin.value && closed.client.value" mat-menu-item>Add item</button>
+                    <button *ngIf="access == 'admin'" [disabled]="closed.admin.value" (click)="closeProject()" mat-menu-item>Close project</button>
+                    <button *ngIf="access == 'client'" [disabled]="closed.client.value" (click)="closeProject()" mat-menu-item>Approve project</button>
+                    <button *ngIf="access == 'admin'" (click)="deleteProject()" mat-menu-item>Delete project</button>
                 </mat-menu>
             </div>
         </div>

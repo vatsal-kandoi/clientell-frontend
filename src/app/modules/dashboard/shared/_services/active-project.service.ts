@@ -3,6 +3,7 @@ import {ProjectsService} from './projects.service';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UrlService } from 'src/app/shared/_services/url.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ActiveProjectService {
   users: any[];
   issues: any[];
   links: any[];
+  closed: any;
 
   dashboardFetched: Subject<boolean>;
   usersUpdated: Subject<boolean>;
@@ -22,12 +24,14 @@ export class ActiveProjectService {
   issuesUpdated: Subject<boolean>;
   linksUpdated: Subject<boolean>;
 
-  constructor(private projectsService: ProjectsService, private http: HttpClient, private url: UrlService) {
+  constructor(private projectsService: ProjectsService, private http: HttpClient, private url: UrlService, private router: Router) {
     this.activeProjectID = this.projectsService.activeProjectID;    
     this.fetchProjectDashboard();
     this.projectsService.activeProject.subscribe((val) => {
-      this.activeProjectID = this.projectsService.activeProjectID;    
-      this.fetchProjectDashboard();
+      if (val) {
+        this.activeProjectID = this.projectsService.activeProjectID;    
+        this.fetchProjectDashboard();
+      }
     });
     this.dashboardFetched = new Subject();
     this.usersUpdated = new Subject();
@@ -147,7 +151,33 @@ export class ActiveProjectService {
       console.log(val);
     });
   }
-
+  changeStatusIssue(status, id) {
+    if (status == 'accept') {
+      this.http.post(this.url.acceptIssueUrl, {'issueId': id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
+        if (val.code == 200) {
+          this.issues.forEach((element) => {
+            if (element._id == id) {
+              element.accepted.value = true;
+            }
+          })
+        }
+      });
+    } else if (status == 'reject') {
+      this.http.post(this.url.rejectIssueUrl, {'issueId': id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
+        if (val.code == 200) {
+          this.issues.forEach((element) => {
+            if (element._id == id) {
+              element.accepted.value = false;
+            }
+          })
+        }
+      });
+    } else if (status == 'completed') {
+      return this.http.post(this.url.completeIssueUrl, {'issueId': id, 'projectId': this.activeProjectID});
+    } else if (status == 'incomplete') {
+      return this.http.post(this.url.incompleteIssueUrl, {'issueId': id, 'projectId': this.activeProjectID});
+    }
+  }
   fetchProjectDashboard() {
     return this.http.post(this.url.allProjectsUrl, {'projectId': this.activeProjectID}).subscribe((val: any) => {
       if (val.code == 200) {
@@ -157,12 +187,31 @@ export class ActiveProjectService {
         this.issues = val.issues;
         this.links = val.links;
         this.users = val.users;
+        this.closed = val.closed;
         this.dashboardFetched.next(true);
       } else {
         this.dashboardFetched.next(false);
       }
-
       console.log(val);
     });
+  }
+
+  closeProject() {
+    this.http.post(this.url.closeProjectUrl, {'projectId': this.activeProjectID, 'projectAccess': this.access}).subscribe((val: any) => {
+      if (val.code == 200) {
+
+      } else {
+
+      }
+    })
+  }
+
+  deleteProject() {
+    this.http.post(this.url.deleteProjectUrl, {'projectId': this.activeProjectID}).subscribe((val: any) => {
+      if (val.code == 200) {
+        this.projectsService.removeProject(this.activeProjectID);
+        this.router.navigate(['/dashboard/projects']);
+      }
+    })
   }
 }

@@ -19,6 +19,7 @@ export class ProjectOverviewComponent implements OnInit {
   name: string;
   access: string;
   users: any[];
+  closed: any;
 
   usersToShow: any[];
   constructor(private router: Router, private projectsService: ProjectsService,
@@ -29,11 +30,13 @@ export class ProjectOverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeProject.dashboardFetched.subscribe((val) => {
+      console.log(this.activeProject.closed);
       if (val == true) {
         this.name = this.activeProject.name;
         this.users = this.activeProject.users;
         this.usersToShow = JSON.parse(JSON.stringify(this.users)).splice(0,2);
         this.access = this.activeProject.access;
+        this.closed = this.activeProject.closed;
         this.loadingContent = false;
       } else {
         const projectId: string = this.route.snapshot.queryParamMap.get('projectId');
@@ -65,5 +68,13 @@ export class ProjectOverviewComponent implements OnInit {
       this.bottomSheet.open(AddItemMobileComponent);
     }
 
+  }
+  closeProject() {
+    this.activeProject.closeProject();
+    if (this.access == 'admin') this.closed.admin.value = true;
+    if (this.access == 'client') this.closed.client.value = true;
+  }
+  deleteProject() {
+    this.activeProject.deleteProject();
   }
 }
