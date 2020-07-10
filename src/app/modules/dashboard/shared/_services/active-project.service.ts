@@ -127,6 +127,7 @@ export class ActiveProjectService {
         this.issues.push({
           _id: val.id,
           closed: {value: false, by: null},
+          accepted: {value: false, by: null},
           description,
           status: 'incomplete',
         });
@@ -199,7 +200,7 @@ export class ActiveProjectService {
   closeProject() {
     this.http.post(this.url.closeProjectUrl, {'projectId': this.activeProjectID, 'projectAccess': this.access}).subscribe((val: any) => {
       if (val.code == 200) {
-
+        this.projectsService.switchStatus(this.activeProjectID);
       } else {
 
       }

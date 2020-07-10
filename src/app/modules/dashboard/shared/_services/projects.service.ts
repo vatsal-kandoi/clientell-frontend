@@ -20,6 +20,15 @@ export class ProjectsService {
     this.projectFetched = new Subject();
   }
 
+  switchStatus(id) {
+    this.projects.forEach((element) => {
+      if (element._id == id) {
+        element.closed.admin.value = true;
+      }
+    });
+    this.projectFetched.next(true);
+  }
+
   setActiveProject(id: string) {
     this.activeProjectID = id;
     this.activeProject.next(this.activeProjectID);
@@ -41,6 +50,10 @@ export class ProjectsService {
       if (val.code == 200) {
         this.projects.push({
           name: name,
+          closed: {
+            admin: {value: false, by: null},
+            client: {value: false, by: null},
+          },
           letter: name[0],
           _id: val.id
         });

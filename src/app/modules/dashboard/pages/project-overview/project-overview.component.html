@@ -43,6 +43,15 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <span class="access">
+            <ng-container *ngIf="closed.admin.value">Closed</ng-container>
+            <ng-container *ngIf="!closed.admin.value">Open</ng-container>
+        </span>
+        <span class="access" *ngIf="closed.client.value">
+            <ng-container *ngIf="closed.client.value">Approved</ng-container>
+        </span>
+    </div>
     <div class="margin-top">
         <router-outlet></router-outlet>
     </div>    

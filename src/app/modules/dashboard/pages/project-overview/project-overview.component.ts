@@ -30,7 +30,6 @@ export class ProjectOverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeProject.dashboardFetched.subscribe((val) => {
-      console.log(this.activeProject.closed);
       if (val == true) {
         this.name = this.activeProject.name;
         this.users = this.activeProject.users;
@@ -71,7 +70,9 @@ export class ProjectOverviewComponent implements OnInit {
   }
   closeProject() {
     this.activeProject.closeProject();
-    if (this.access == 'admin') this.closed.admin.value = true;
+    if (this.access == 'admin') {
+      this.closed.admin.value = true;
+    }
     if (this.access == 'client') this.closed.client.value = true;
   }
   deleteProject() {
