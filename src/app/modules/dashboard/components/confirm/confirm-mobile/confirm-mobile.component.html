@@ -1,0 +1,23 @@
+<div class="row align-space-between">
+    <div>
+        <ng-container *ngIf="type == 'close'">
+            <ng-container *ngIf="access == 'client'">
+                Are you sure you want to approve the project?    
+            </ng-container>
+            <ng-container *ngIf="access == 'admin'">
+                Are you sure you want to close the project?    
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="type == 'delete'">
+            Are you sure you want to delete the project?
+        </ng-container>
+    </div>
+    <div class="row center">
+        <button (click)="tick()" mat-icon-button color="accent" aria-label="">
+            <mat-icon>done</mat-icon>
+        </button>
+        <button (click)="cross()" mat-icon-button color="error" aria-label="">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+</div>

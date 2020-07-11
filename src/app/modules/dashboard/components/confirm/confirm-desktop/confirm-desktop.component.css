@@ -1,0 +1,6 @@
+.center {
+    align-items: center;
+}
+.align-space-between{
+    align-items: center; justify-content: space-between;
+}

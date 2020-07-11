@@ -29,7 +29,6 @@ export class AddItemDesktopComponent implements OnInit {
 
   ngOnInit(): void {
     this.access = this.activeProject.access;
-    console.log(this.access)
   }
 
   toggle() {

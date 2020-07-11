@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProjectsService } from '../../shared/_services/projects.service';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatBottomSheet, MatBottomSheetConfig } from '@angular/material/bottom-sheet';
 import { DisplaySizeService } from 'src/app/shared/_services/display-size.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddItemDesktopComponent } from '../../components/add-item/add-item-desktop/add-item-desktop.component';
 import { AddItemMobileComponent } from '../../components/add-item/add-item-mobile/add-item-mobile.component';
 import {ActiveProjectService} from '../../shared/_services/active-project.service';
+import { ConfirmMobileComponent } from '../../components/confirm/confirm-mobile/confirm-mobile.component';
+import { ConfirmDesktopComponent } from '../../components/confirm/confirm-desktop/confirm-desktop.component';
 
 @Component({
   selector: 'app-project-overview',
@@ -74,16 +76,66 @@ export class ProjectOverviewComponent implements OnInit {
     } else {
       this.bottomSheet.open(AddItemMobileComponent);
     }
-
   }
   closeProject() {
-    this.activeProject.closeProject();
-    if (this.access == 'admin') {
-      this.closed.admin.value = true;
+    if (this.displaySize.displayType == 'desktop') {
+      const dialogConfig = new MatDialogConfig()
+      dialogConfig.data = {type: 'close', access: this.access};
+      dialogConfig.width = '350px';
+      dialogConfig.autoFocus = false;
+      const dialog = this.dialog.open(ConfirmDesktopComponent, dialogConfig);      
+      dialog.afterClosed().subscribe(
+        data => {
+          if (data) {
+            this.activeProject.closeProject();
+            if (this.access == 'admin') this.closed.admin.value = true;
+            if (this.access == 'client') this.closed.client.value = true;
+          }
+        }
+      );      
+    } else {
+      const sheetConfig = new MatBottomSheetConfig();      
+      sheetConfig.data = {type: 'close', access: this.access};
+      sheetConfig.autoFocus = false;
+
+      const sheet = this.bottomSheet.open(ConfirmMobileComponent, sheetConfig);
+      sheet.afterDismissed().subscribe(
+        data => {
+          if (data) {
+            this.activeProject.closeProject();
+            if (this.access == 'admin') this.closed.admin.value = true;
+            if (this.access == 'client') this.closed.client.value = true;
+          }
+        }
+      );      
     }
-    if (this.access == 'client') this.closed.client.value = true;
   }
   deleteProject() {
-    this.activeProject.deleteProject();
+    if (this.displaySize.displayType == 'desktop') {
+      const dialogConfig = new MatDialogConfig()
+      dialogConfig.data = {type: 'delete', access: this.access};
+      dialogConfig.width = '350px';
+      dialogConfig.autoFocus = false;
+      const dialog = this.dialog.open(ConfirmDesktopComponent, dialogConfig);      
+      dialog.afterClosed().subscribe(
+        data => {
+          if (data) {
+            this.activeProject.deleteProject();
+          }
+        }
+      );    
+    } else {
+      const sheetConfig = new MatBottomSheetConfig();      
+      sheetConfig.data = {type: 'delete', access: this.access};
+      sheetConfig.autoFocus = false;
+      const sheet = this.bottomSheet.open(ConfirmMobileComponent, sheetConfig);
+      sheet.afterDismissed().subscribe(
+        data => {
+          if (data) {
+            this.activeProject.closeProject();
+          }
+        }
+      );
+    }
   }
 }
