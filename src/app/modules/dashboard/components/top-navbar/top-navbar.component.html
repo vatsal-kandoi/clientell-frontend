@@ -1,0 +1,13 @@
+<div class="full-width row center">
+    <ng-container *ngIf="!altSection">
+        <span class="icon" (click)="toggleMenu()">
+            <mat-icon aria-hidden="false" class="icon" aria-label="Menu icon>">menu</mat-icon>
+        </span>
+    </ng-container>
+    <ng-container *ngIf="altSection">
+        <div class="row center" (click)="back()">
+            <mat-icon aria-hidden="false" class="icon" aria-label="Menu icon>">arrow_backward</mat-icon>
+            Go back
+        </div>
+    </ng-container>
+</div>

@@ -43,9 +43,10 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { AuthGuardService } from '../login/_services/auth.guard';
 import { ConfirmMobileComponent } from './components/confirm/confirm-mobile/confirm-mobile.component';
 import { ConfirmDesktopComponent } from './components/confirm/confirm-desktop/confirm-desktop.component';
+import { TopNavbarComponent } from './components/top-navbar/top-navbar.component';
 
 @NgModule({
-  declarations: [DashboardComponent, HomeComponent, UserComponent, NavbarComponent, ProjectDetailsComponent, CommentsComponent, ProjectItemComponent, AddUserComponent, UsersComponent, LogoutComponent, ProjectNavbarComponent, AllProjectsComponent, AddProjectMobileComponent, AddProjectDesktopComponent, ProjectOverviewComponent, AddItemMobileComponent, AddItemDesktopComponent, DatePipe, ConfirmMobileComponent, ConfirmDesktopComponent],
+  declarations: [DashboardComponent, HomeComponent, UserComponent, NavbarComponent, ProjectDetailsComponent, CommentsComponent, ProjectItemComponent, AddUserComponent, UsersComponent, LogoutComponent, ProjectNavbarComponent, AllProjectsComponent, AddProjectMobileComponent, AddProjectDesktopComponent, ProjectOverviewComponent, AddItemMobileComponent, AddItemDesktopComponent, DatePipe, ConfirmMobileComponent, ConfirmDesktopComponent, TopNavbarComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,

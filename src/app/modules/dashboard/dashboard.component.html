@@ -10,9 +10,7 @@
 
     <div class="right">
         <mat-toolbar class="top row center"  *ngIf="displayType == 'mobile'">
-            <span class="icon" (click)="toggle()">
-                <mat-icon aria-hidden="false" class="icon" aria-label="Menu icon>">menu</mat-icon>
-            </span>
+            <top-navbar class="full-width row center" (toggle)="toggle()" [opened]="opened"></top-navbar>
         </mat-toolbar>
 
         <router-outlet></router-outlet>
