@@ -31,6 +31,7 @@ export class UrlService {
   incompleteIssueUrl: string;
   markFeatureCompleteUrl: string;
   acceptFeatureUrl: string;
+  getOverview: string;
   
   constructor() {
     this.baseUrl = `http://localhost:3000/api`;
@@ -61,5 +62,6 @@ export class UrlService {
 
     this.markFeatureCompleteUrl = `${this.baseUrl}/project/feature/complete`;
     this.acceptFeatureUrl = `${this.baseUrl}/project/feature/accept`
+    this.getOverview = `${this.baseUrl}/user/overview`;
   }
 }

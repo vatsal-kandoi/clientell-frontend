@@ -1,2 +1,96 @@
-<h2>Getting started</h2>
-Create a project, or ask an administrator to add you to one
+<div class="row loader" *ngIf="!isLoaded">
+    <mat-spinner diameter="50"></mat-spinner>
+</div>
+<div *ngIf="isLoaded">
+    <ng-container *ngIf="projects.length == 0">
+        <h2>Getting started</h2>
+        Create a project, or ask an administrator to add you to one
+    </ng-container>
+    <ng-container *ngIf="projects.length != 0">
+        <h2>Recently active projects</h2>
+        <div class="mobile">
+            <div class="row projects-mobile">
+                <div (click)="openProject(project._id)" class="project-mobile" *ngFor="let project of projects">
+                    <div class="row justify-space-between">
+                        <div>
+                            <h3>{{project.name}}</h3>    
+                        </div>
+                        <div>
+                            {{project.createdAt | date }}
+                        </div>
+                    </div>
+                    <div>
+                        {{project.users}} users
+                    </div>
+                    <div class="column">
+                        <div>
+                            {{project.issues}} issues
+                        </div>
+                        <div>
+                            {{project.features}} features
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="desktop">
+            <div class="padding">
+                <div (click)="openProject(project._id)" class="project-desktop" *ngFor="let project of projects">
+                    <div class="row align-space-between">
+                        <div>
+                            <h3>{{project.name}}</h3>
+                            <span>Created on {{project.createdAt | date }}</span>
+                        </div>
+                        <div class="row center">
+                            <span class="status">
+                                <ng-container *ngIf="project.closed.admin.value">
+                                    Approved
+                                </ng-container>
+                                <ng-container *ngIf="!project.closed.admin.value">
+                                    In progress
+                                </ng-container>                                
+                            </span>
+                            <span class="status">
+                                <ng-container *ngIf="project.closed.admin.value">
+                                    Closed
+                                </ng-container>
+                                <ng-container *ngIf="!project.closed.admin.value">
+                                    Open
+                                </ng-container>                                
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row align-space-between">
+                        <div></div>
+                        <div class="row center stats">
+                            <div class="stat row center">
+                                <div class="number">
+                                    {{project.users}}
+                                </div>                    
+                                <div>
+                                    users
+                                </div>
+                            </div>
+                            <div class="stat row center">
+                                <div class="number">
+                                    {{project.features}}
+                                </div>                    
+                                <div>
+                                    features
+                                </div>
+                            </div>
+                            <div class="stat row center">
+                                <div class="number">
+                                    {{project.issues}}
+                                </div>                    
+                                <div>
+                                    issues
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </ng-container>
+</div>
