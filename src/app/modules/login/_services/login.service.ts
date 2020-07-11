@@ -33,7 +33,6 @@ export class LoginService {
         this.token.setTokens(data.access_token, data.refresh_token);
         this.router.navigate(['/dashboard']);
       } else {
-        console.log(data);
         this.error.next(data.message);
         setTimeout(() => {
           this.error.next('');
@@ -43,7 +42,6 @@ export class LoginService {
   }
   login(email, password) {
     this.http.post(this.url.loginUrl, {email, password}).subscribe((data: AuthFetchedResponse) => {
-      console.log(data);
       if (data.success == true) {
         this.token.setTokens(data.access_token, data.refresh_token);
         this.router.navigate(['/dashboard']);
@@ -62,7 +60,8 @@ export class LoginService {
       }
     });
   }
-  logout() {
+
+  async logout() {
     this.token.deleteTokens();
     this.router.navigate(['/auth/login']);
   }

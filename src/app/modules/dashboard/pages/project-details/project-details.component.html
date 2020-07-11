@@ -20,7 +20,7 @@
         <li *ngFor="let feature of features; let index = index">
             <div class="row space-between">
                 <div class="row max-width-60 align-center">
-                    <mat-checkbox class="margin-right" (click)="toggleStatus('feature', feature._id, feature.completed.value)" [checked]="feature.completed.value" disabled="{{access != 'developer'}}">
+                    <mat-checkbox class="margin-right" (change)="toggleStatus('feature', feature._id, feature.completed.value)" [checked]="feature.completed.value" disabled="{{access != 'developer'}}">
                     </mat-checkbox>
                     {{ feature.description }}
                 </div>
@@ -57,7 +57,7 @@
         <li *ngFor="let issue of issues; let index = index">
             <div class="issue row space-between">
                 <div class="row max-width-60 align-center">
-                    <mat-checkbox class="margin-right" (click)="toggleStatus('issue', issue._id, issue.closed.value)" [checked]="issue.closed.value" disabled="{{access != 'developer'}}">
+                    <mat-checkbox class="margin-right" (change)="toggleStatus('issue', issue._id, issue.closed.value)" [checked]="issue.closed.value" disabled="{{access != 'developer'}}">
                     </mat-checkbox>
                     {{ issue.description }}
                 </div>

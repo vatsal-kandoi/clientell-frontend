@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {CookieService} from 'ngx-cookie-service';
+import { of, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class TokenService {
         this.accessToken = data.access;
         this.refreshToken = data.refresh;
       } catch (err) {
-
+        this.accessToken = '';
+        this.refreshToken = '';
       }
     }
   }
@@ -40,16 +42,17 @@ export class TokenService {
     return this.refreshToken;
   }
 
-  deleteTokens() {
-    this.accessToken = '';
-    this.refreshToken = '';
+  async deleteTokens() {
+    delete this.accessToken;
+    delete this.refreshToken;
     this.cookie.delete('ClientellToken');
+    return true;
   }
 
   isAuthenticated() {
-    if (this.accessToken != '' && this.accessToken != undefined) return true;
+    if (this.accessToken != '' && this.accessToken != undefined && this.accessToken != null) return true;
     this.fetchTokens();
-    if (this.accessToken != '' && this.accessToken != undefined) return true;
+    if (this.accessToken != '' && this.accessToken != undefined && this.accessToken != null) return true;
     return false;
   }
 }

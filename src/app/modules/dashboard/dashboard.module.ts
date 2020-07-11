@@ -67,9 +67,6 @@ import { ConfirmDesktopComponent } from './components/confirm/confirm-desktop/co
     MatRadioModule
   ],
   providers: [
-    AuthGuardService,
-    LoginService,
-    TokenService
   ]
 })
 export class DashboardModule { }
