@@ -44,6 +44,11 @@ import { AuthGuardService } from '../login/_services/auth.guard';
 import { ConfirmMobileComponent } from './components/confirm/confirm-mobile/confirm-mobile.component';
 import { ConfirmDesktopComponent } from './components/confirm/confirm-desktop/confirm-desktop.component';
 import { TopNavbarComponent } from './components/top-navbar/top-navbar.component';
+import {MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBar} from '@angular/material/snack-bar';
+import { CommentService } from './shared/_services/comment.service';
+import { ProjectsService } from './shared/_services/projects.service';
+import { ActiveProjectService } from './shared/_services/active-project.service';
+import { UserService } from './shared/_services/user.service';
 
 @NgModule({
   declarations: [DashboardComponent, HomeComponent, UserComponent, NavbarComponent, ProjectDetailsComponent, CommentsComponent, ProjectItemComponent, AddUserComponent, UsersComponent, LogoutComponent, ProjectNavbarComponent, AllProjectsComponent, AddProjectMobileComponent, AddProjectDesktopComponent, ProjectOverviewComponent, AddItemMobileComponent, AddItemDesktopComponent, DatePipe, ConfirmMobileComponent, ConfirmDesktopComponent, TopNavbarComponent],
@@ -62,12 +67,18 @@ import { TopNavbarComponent } from './components/top-navbar/top-navbar.component
     ReactiveFormsModule,
     MatSelectModule,
     FormsModule,
+    MatSnackBarModule,
     MatMenuModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatRadioModule
   ],
   providers: [
+    CommentService,
+    ProjectsService, 
+    ActiveProjectService,
+    UserService,
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 3000}}
   ]
 })
 export class DashboardModule { }

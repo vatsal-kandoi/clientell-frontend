@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { UrlService } from 'src/app/shared/_services/url.service';
 import { Subject } from 'rxjs';
 import { ProjectsService } from './projects.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +14,12 @@ export class CommentService {
   activeType: any;
   activeID: any;
   commentsFetched: Subject<boolean>;
-
+  userEmail: string;
   data: any;
 
-  constructor(private http: HttpClient, private url: UrlService, private activeProject: ActiveProjectService, private allProjects: ProjectsService, ) {
+  constructor(private http: HttpClient, private url: UrlService, private activeProject: ActiveProjectService, private allProjects: ProjectsService, private snackBar: MatSnackBar ) {
     this.commentsFetched = new Subject();
+    this.userEmail = this.allProjects.userEmail;
   }
 
   setActive(type: string, id: string) {
@@ -35,6 +38,11 @@ export class CommentService {
         });
         this.data.comments = JSON.parse(JSON.stringify(temp));
         this.commentsFetched.next(true);
+      } else {
+        let snackBarRef = this.snackBar.open("Error fetching the comments", "Reload");
+        snackBarRef.onAction().subscribe(() => {
+          this.deleteComment(id);      
+        });
       }
     });
   }
@@ -52,6 +60,11 @@ export class CommentService {
           _id: val.id
         })        
         this.commentsFetched.next(true);
+      } else {
+        let snackBarRef = this.snackBar.open("Error adding the comment", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.addComment(comment);      
+        });
       }
     });
   }
@@ -61,8 +74,13 @@ export class CommentService {
       if (val.code == 200) {
         console.log(val);
         this.data = {...val};
+        this.userEmail = this.allProjects.userEmail;
         this.commentsFetched.next(true);
       } else {
+        let snackBarRef = this.snackBar.open("Error fetching the comments", "Reload");
+        snackBarRef.onAction().subscribe(() => {
+          this.getComments();      
+        });
         this.commentsFetched.next(false);
       }
     })

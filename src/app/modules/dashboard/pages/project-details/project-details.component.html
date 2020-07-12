@@ -36,16 +36,23 @@
                             Incomplete
                         </ng-container>
                     </span>
-                    <button (click)="comment('feature', feature._id)" mat-icon-button color="accent">
-                        <mat-icon>comment</mat-icon>
+                    <button [disableRipple]="true" mat-icon-button [matMenuTriggerFor]="menu1">
+                        <mat-icon>more_vert</mat-icon>
                     </button>
-                    <button *ngIf="access == 'client'" (click)="toggleFeatureStatus(feature._id, feature.accepted.value)" mat-icon-button color="accent">
-                        <mat-icon *ngIf="!feature.accepted.value">done_all</mat-icon>
-                        <mat-icon *ngIf="feature.accepted.value">close</mat-icon>
-                    </button>
-                    <button (click)="delete('feature',feature._id)" *ngIf="access == 'admin' && (!closed.admin.value && !closed.client.value)" mat-icon-button color="error">
-                        <mat-icon>delete_outline</mat-icon>
-                    </button>
+                    <mat-menu  #menu1="matMenu">
+                        <div class="row">
+                            <button (click)="comment('feature', feature._id)" mat-icon-button color="accent">
+                                <mat-icon>comment</mat-icon>
+                            </button>
+                            <button *ngIf="access == 'client' && feature.accepted.value" (click)="toggleFeatureStatus(feature._id, feature.accepted.value)" mat-icon-button color="accent">
+                                <mat-icon *ngIf="!feature.accepted.value">done_all</mat-icon>
+                                <mat-icon *ngIf="feature.accepted.value">close</mat-icon>
+                            </button>
+                            <button (click)="delete('feature',feature._id)" *ngIf="access == 'admin' && (!closed.admin.value && !closed.client.value)" mat-icon-button color="error">
+                                <mat-icon>delete_outline</mat-icon>
+                            </button>
+                        </div>
+                    </mat-menu>
                 </div>
             </div>
             <mat-divider *ngIf="index != features.length - 1"></mat-divider>
@@ -73,18 +80,25 @@
                             Open
                         </ng-container>
                     </span>
-                    <button (click)="comment('issue', issue._id)" mat-icon-button color="accent">
-                        <mat-icon>comment</mat-icon>
+                    <button [disableRipple]="true" mat-icon-button [matMenuTriggerFor]="menu2">
+                        <mat-icon>more_vert</mat-icon>
                     </button>
-                    <button (click)="acceptIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && !issue.accepted.value && issue.closed.value" mat-icon-button color="accent">
-                        <mat-icon>done_all</mat-icon>
-                    </button>
-                    <button (click)="rejectIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && issue.accepted.value && issue.closed.value"  mat-icon-button color="accent">
-                        <mat-icon>close</mat-icon>
-                    </button>
-                    <button (click)="delete('issue', issue._id)" *ngIf="(access == 'client' || access == 'admin') && (!closed.admin.value && !closed.client.value)" mat-icon-button color="error">
-                        <mat-icon>delete_outline</mat-icon>
-                    </button>
+                    <mat-menu #menu2="matMenu">
+                        <div class="row">
+                            <button (click)="comment('issue', issue._id)" mat-icon-button color="accent">
+                                <mat-icon>comment</mat-icon>
+                            </button>
+                            <button (click)="acceptIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && !issue.accepted.value && issue.closed.value" mat-icon-button color="accent">
+                                <mat-icon>done_all</mat-icon>
+                            </button>
+                            <button (click)="rejectIssue(issue._id)" *ngIf="(access == 'client' || access == 'admin') && issue.accepted.value && issue.closed.value"  mat-icon-button color="accent">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                            <button (click)="delete('issue', issue._id)" *ngIf="(access == 'client' || access == 'admin') && (!closed.admin.value && !closed.client.value)" mat-icon-button color="error">
+                                <mat-icon>delete_outline</mat-icon>
+                            </button>
+                        </div>
+                    </mat-menu>
                 </div>
             </div>
             <mat-divider *ngIf="index != issues.length - 1"></mat-divider>

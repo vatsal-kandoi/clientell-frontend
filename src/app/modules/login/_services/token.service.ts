@@ -31,7 +31,7 @@ export class TokenService {
   setTokens(access: string, refresh: string) {
     this.accessToken = access;
     this.refreshToken = refresh;
-    this.cookie.set('ClientellToken', JSON.stringify({access: this.accessToken, refresh: this.refreshToken}));
+    this.cookie.set('ClientellToken', JSON.stringify({access: this.accessToken, refresh: this.refreshToken}), 30000000000, '/');
   }
 
   getAccessToken() {

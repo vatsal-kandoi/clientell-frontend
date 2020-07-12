@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 export class CommentsComponent implements OnInit {
 
   userComment: FormControl;
+  userEmail: string;
 
   description: string;
   comments: [];
@@ -44,7 +45,7 @@ export class CommentsComponent implements OnInit {
         } else {
           this.closed = data.closed.value;
         }
-  
+        this.userEmail = this.commentService.userEmail;
         this.comments = data.comments;
         this.isLoaded = true;
       } else {

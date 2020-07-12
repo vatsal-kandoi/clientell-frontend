@@ -29,3 +29,10 @@ input{
 input:active{
     outline: none;
 }
+.relative{
+    position: relative;
+}
+
+.spinner {
+    position: absolute; top: 7.5px; right: 20px;
+}

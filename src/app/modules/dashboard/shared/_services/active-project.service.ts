@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UrlService } from 'src/app/shared/_services/url.service';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class ActiveProjectService {
   issuesUpdated: Subject<boolean>;
   linksUpdated: Subject<boolean>;
 
-  constructor(private projectsService: ProjectsService, private http: HttpClient, private url: UrlService, private router: Router) {
+  constructor(private projectsService: ProjectsService, private http: HttpClient, private url: UrlService, private router: Router, private snackBar: MatSnackBar) {
     this.activeProjectID = this.projectsService.activeProjectID;    
     this.fetchProjectDashboard();
     this.projectsService.activeProject.subscribe((val) => {
@@ -74,8 +75,12 @@ export class ActiveProjectService {
           description,
           status: 'incomplete',
         })
-
         this.featuresUpdated.next(true);
+      } else {
+        let snackBarRef = this.snackBar.open("Error adding the feature", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.addFeature(description, dueDate);
+        });
       }
     });
   }
@@ -91,6 +96,11 @@ export class ActiveProjectService {
         })
         this.features = JSON.parse(JSON.stringify(temp));
         this.featuresUpdated.next(true);
+      } else {
+        let snackBarRef = this.snackBar.open("Error removing the feature", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.removeFeature(id);
+        });
       }
     });
   }
@@ -103,6 +113,11 @@ export class ActiveProjectService {
           link
         });
         this.linksUpdated.next(true);
+      } else {
+        let snackBarRef = this.snackBar.open("Error adding the link", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.addLink(description, link);
+        });
       }
     })
   }
@@ -118,6 +133,11 @@ export class ActiveProjectService {
         })
         this.links = JSON.parse(JSON.stringify(temp));
         this.linksUpdated.next(true);
+      } else {
+        let snackBarRef = this.snackBar.open("Error removing the link", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.removeLink(link_id);
+        });
       }
     })
   }
@@ -133,6 +153,11 @@ export class ActiveProjectService {
         });
 
         this.issuesUpdated.next(true);
+      } else {
+        let snackBarRef = this.snackBar.open("Error adding the issue", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.addIssue(description);
+        });
       }
     });
   }
@@ -148,8 +173,12 @@ export class ActiveProjectService {
         })
         this.issues = JSON.parse(JSON.stringify(temp));
         this.issuesUpdated.next(true);
+      } else {
+        let snackBarRef = this.snackBar.open("Error removing the issue", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.removeIssue(id);
+        });
       }
-      console.log(val);
     });
   }
   changeStatusIssue(status, id) {
@@ -162,6 +191,7 @@ export class ActiveProjectService {
             }
           })
         }
+        console.log(val);
       });
     } else if (status == 'reject') {
       this.http.post(this.url.rejectIssueUrl, {'issueId': id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
@@ -169,14 +199,11 @@ export class ActiveProjectService {
           this.issues.forEach((element) => {
             if (element._id == id) {
               element.accepted.value = false;
+              element.closed.value = false;
             }
           })
         }
       });
-    } else if (status == 'completed') {
-      return this.http.post(this.url.completeIssueUrl, {'issueId': id, 'projectId': this.activeProjectID});
-    } else if (status == 'incomplete') {
-      return this.http.post(this.url.incompleteIssueUrl, {'issueId': id, 'projectId': this.activeProjectID});
     }
   }
   fetchProjectDashboard() {
@@ -191,9 +218,12 @@ export class ActiveProjectService {
         this.closed = val.closed;
         this.dashboardFetched.next(true);
       } else {
+        let snackBarRef = this.snackBar.open("Error fetching the project dashboard", "Reload");
+        snackBarRef.onAction().subscribe(() => {
+          this.fetchProjectDashboard();      
+        });
         this.dashboardFetched.next(false);
       }
-      console.log(val);
     });
   }
 
@@ -202,7 +232,11 @@ export class ActiveProjectService {
       if (val.code == 200) {
         this.projectsService.switchStatus(this.activeProjectID);
       } else {
-
+        let snackBarRef = this.snackBar.open("Error closing the project", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.closeProject();
+        });
+        this.dashboardFetched.next(false);
       }
     })
   }
@@ -212,6 +246,11 @@ export class ActiveProjectService {
       if (val.code == 200) {
         this.projectsService.removeProject(this.activeProjectID);
         this.router.navigate(['/dashboard/projects']);
+      } else {
+        let snackBarRef = this.snackBar.open("Error deleting the project", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.deleteProject();
+        });
       }
     })
   }
@@ -222,6 +261,9 @@ export class ActiveProjectService {
         this.features.forEach((element) => {
           if (element._id == id) {
             element.accepted.value = status;
+            if (!status) {
+              element.completed.value = false;
+            }
           }
         });
         this.featuresUpdated.next(true);

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { UrlService } from '../../../../shared/_services/url.service';
 import { Subject } from 'rxjs';
 import { ActiveProjectService } from './active-project.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Injectable({
@@ -12,7 +13,7 @@ import { ActiveProjectService } from './active-project.service';
 export class UserService {
   userSearchCompleted: Subject<boolean>;
   searchResults: any[];
-  constructor(private http: HttpClient, private url: UrlService, private activeProject: ActiveProjectService) {
+  constructor(private http: HttpClient, private url: UrlService, private activeProject: ActiveProjectService, private snackBar: MatSnackBar) {
     this.userSearchCompleted = new Subject();
   }
 
@@ -20,6 +21,11 @@ export class UserService {
     this.http.post(this.url.removeUserToProjectUrl, {'projectId': this.activeProject.activeProjectID, 'emailToRemove': email}).subscribe((val: any) => {
       if (val.code == 200) {
         this.activeProject.removeUser(email);
+      } else {
+        let snackBarRef = this.snackBar.open("Error removing the user from the projects", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.deleteUser(email);
+        });
       }
     });
   }
@@ -28,6 +34,11 @@ export class UserService {
     this.http.post(this.url.addUserToProjectUrl, {'projectId': this.activeProject.activeProjectID, 'emailToAdd': email, mode: role}).subscribe((val: any) => {
       if (val.code == 200) {
         this.activeProject.addUser(name, email, role, val.id);
+      } else {
+        let snackBarRef = this.snackBar.open("Error adding the user to the projects", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.addUserToProject(role, name, email);
+        });
       }
     })
   }

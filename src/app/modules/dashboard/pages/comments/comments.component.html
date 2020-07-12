@@ -51,7 +51,7 @@
         </li>
         <li *ngFor="let comment of comments">
             <div class="comment">
-                <span class="icon">
+                <span class="icon" *ngIf="userEmail == comment.by.email">
                         <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
                     <mat-menu #menu="matMenu">
                         <button (click)="deleteComment(comment._id)" mat-menu-item>Delete</button>

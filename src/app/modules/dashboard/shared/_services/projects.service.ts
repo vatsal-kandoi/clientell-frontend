@@ -3,6 +3,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UrlService } from 'src/app/shared/_services/url.service';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Injectable({
@@ -18,7 +19,7 @@ export class ProjectsService {
   userName: string;
   userEmail: any;
 
-  constructor(private http: HttpClient, private url: UrlService, private router: Router) {
+  constructor(private http: HttpClient, private url: UrlService, private router: Router, private snackBar: MatSnackBar) {
     this.projectAdded = new Subject();
     this.activeProject = new Subject();
     this.projectFetched = new Subject();
@@ -65,6 +66,11 @@ export class ProjectsService {
         this.activeProjectID = val.id;
         this.activeProject.next(this.activeProjectID);
         this.router.navigate(['/dashboard/project'], {queryParams: {projectId: this.activeProjectID}});
+      } else {
+        let snackBarRef = this.snackBar.open("Error adding the project", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.addProject(name);
+        });
       }
     });
   }
@@ -79,6 +85,11 @@ export class ProjectsService {
         this.userName = val.name;
         this.userEmail = val.email;
         this.projectFetched.next(true);
+      } else {
+        let snackBarRef = this.snackBar.open("Error fetching the projects", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.fetchAllProjects();
+        });
       }
     });
   }

@@ -11,8 +11,11 @@
                 <div>
                     <input placeholder="Password" type="password" formControlName="password" required>
                 </div>
-                <div>
+                <div class="relative">
                     <button (click)="login()" mat-flat-button color="primary">Login</button>
+                    <span class="spinner" *ngIf="!fetchedResponse">
+                        <mat-spinner color="accent" diameter="20"></mat-spinner>
+                    </span>
                 </div>
                 <div>
                     {{error}}

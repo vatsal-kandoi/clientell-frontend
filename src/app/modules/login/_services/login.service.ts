@@ -11,11 +11,13 @@ import {AuthFetchedResponse} from '../../../shared/_interfaces/auth-response.int
 })
 export class LoginService {
   error: Subject<string>;
+  completedAuthRequest: Subject<boolean>;
   cachedRequests: Array<HttpRequest<any>> = [];
 
   
   constructor(private url: UrlService, private http: HttpClient, private router: Router, private token: TokenService) {
     this.error = new Subject();
+    this.completedAuthRequest = new Subject();
   }
 
   public collectFailedRequest(request): void {
@@ -27,8 +29,10 @@ export class LoginService {
     // be called after the token is refreshed
   }
 
-  signup(name, email, password) {
+  signup(name, email, password) {    
     this.http.post(this.url.signupUrl, {name: name, email: email, password: password}).subscribe((data: AuthFetchedResponse) => {
+      this.completedAuthRequest.next(true);
+
       if (data.success == true) {
         this.token.setTokens(data.access_token, data.refresh_token);
         this.router.navigate(['/dashboard']);
@@ -42,6 +46,7 @@ export class LoginService {
   }
   login(email, password) {
     this.http.post(this.url.loginUrl, {email, password}).subscribe((data: AuthFetchedResponse) => {
+      this.completedAuthRequest.next(true);
       if (data.success == true) {
         this.token.setTokens(data.access_token, data.refresh_token);
         this.router.navigate(['/dashboard']);

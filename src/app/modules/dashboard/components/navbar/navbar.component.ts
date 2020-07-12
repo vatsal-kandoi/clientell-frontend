@@ -22,6 +22,7 @@ export class NavbarComponent implements OnInit {
   showProject = false;
   constructor(private projectsService: ProjectsService, private bottomSheet: MatBottomSheet, private router: Router, private displaySize: DisplaySizeService, private dialog: MatDialog) {
     this.projectName = new FormControl('');
+    this.projectsService.fetchAllProjects();
   }
 
   ngOnInit(): void {

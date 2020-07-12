@@ -11,8 +11,10 @@ import {LoginService} from '../../_services/login.service';
 export class SignUpComponent implements OnInit {
   signupForm: FormGroup;
   error: string;
+  fetchedResponse: boolean;
   
   constructor(private loginService: LoginService) {
+    this.fetchedResponse = true;
     this.signupForm = new FormGroup({
       name: new FormControl(''),
       email: new FormControl(''),
@@ -26,9 +28,15 @@ export class SignUpComponent implements OnInit {
         this.error = val;
       }
     });
+    this.loginService.completedAuthRequest.subscribe((val) => {
+      if (val) {
+        this.fetchedResponse = true;
+      }
+    })
   }
 
   signup() {
+    this.fetchedResponse = false;
     this.loginService.signup(this.signupForm.get('name').value,this.signupForm.get('email').value,this.signupForm.get('password').value);
   }
 }
