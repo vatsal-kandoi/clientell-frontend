@@ -207,6 +207,7 @@ export class ActiveProjectService {
     }
   }
   fetchProjectDashboard() {
+    if (this.activeProjectID == undefined) return;
     this.http.post(this.url.allProjectsUrl, {'projectId': this.activeProjectID}).subscribe((val: any) => {
       if (val.code == 200) {
         this.access = val.access;

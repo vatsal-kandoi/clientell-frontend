@@ -22,10 +22,6 @@ export class NavbarComponent implements OnInit {
   showProject = false;
   constructor(private projectsService: ProjectsService, private bottomSheet: MatBottomSheet, private router: Router, private displaySize: DisplaySizeService, private dialog: MatDialog) {
     this.projectName = new FormControl('');
-    this.projectsService.fetchAllProjects();
-  }
-
-  ngOnInit(): void {
     if (this.projectsService.projects == undefined) this.projectsService.fetchAllProjects();
     else {
       this.projects = this.projectsService.projects;
@@ -33,7 +29,9 @@ export class NavbarComponent implements OnInit {
       this.projectsToShow = JSON.parse(JSON.stringify(this.projects)).splice(0,5);
       this.showProject = true;
     }
+  }
 
+  ngOnInit(): void {
     this.projectsService.projectFetched.subscribe((val) => {
       if (val == true) {
         this.projects = this.projectsService.projects;

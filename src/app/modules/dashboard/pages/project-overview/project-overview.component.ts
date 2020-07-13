@@ -32,6 +32,11 @@ export class ProjectOverviewComponent implements OnInit {
       this.loadingContent = true;
       this.errorGettingParam = false;
       this.showReload = false;
+      if (this.activeProject.activeProjectID == undefined) {
+        const projectId: string = this.route.snapshot.queryParamMap.get('projectId');
+        this.activeProject.activeProjectID = projectId;
+        this.activeProject.fetchProjectDashboard();
+      }
   }
 
   ngOnInit(): void {
@@ -43,11 +48,6 @@ export class ProjectOverviewComponent implements OnInit {
         this.access = this.activeProject.access;
         this.closed = this.activeProject.closed;
         this.loadingContent = false;
-      } else if (!this.errorGettingParam) {
-        const projectId: string = this.route.snapshot.queryParamMap.get('projectId');
-        this.activeProject.activeProjectID = projectId;
-        this.activeProject.fetchProjectDashboard();
-        this.errorGettingParam = true;
       } else {
         this.showReload = true;
         this.router.navigate(['/dashboard']);

@@ -13,34 +13,43 @@ import { LoginService } from '../_services/login.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  accessTokenFailed: boolean;
   constructor(private token: TokenService, private auth: LoginService) {
-    this.accessTokenFailed = false;
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler):  Observable<HttpEvent<any>> {
     if (request.url.includes('/auth/login') || request.url.includes('/auth/signup')) {
       return next.handle(request).pipe(catchError(this.handleError));      
     }
-    let token = (this.accessTokenFailed) ? this.token.getRefeshToken() : this.token.getAccessToken();
+    let token = this.token.fetchToken();
     request = request.clone({
       setHeaders: {
         'Content-Type': 'application/json',
         'Authorization': `${token}`
       },
     });
-    return next.handle(request).pipe(retry(3),catchError(this.handleError));
+    return next.handle(request)
+      .pipe(catchError((err: HttpResponse<any>) => {
+        if (err.status === 401) {
+          if (err.body.RequireRefreshToken) {
+            this.token.getRefeshToken();
+            next.handle(request);
+          } else {
+            this.auth.logout();
+          }
+        } else if (err.status === 500 || err.status === 404) {
+          return throwError('Something bad happened. Please try again later.');
+        }    
+      }));
   }
 
   private handleError(error: HttpResponse<any>) {
     if (error.status === 401) {
-      this.accessTokenFailed = false;
-      this.auth.logout();
-    } else if (error.status === 402) {
-      this.accessTokenFailed = true;
-    } else if (error.status === 403) {
-      this.accessTokenFailed = false;
-      this.token.setTokens(error.body.access_token, error.body.refresh_token);
+      if (error.body.RequireRefreshToken) {
+        this.token.getRefeshToken();
+
+      } else {
+        this.auth.logout();
+      }
     } else if (error.status === 500 || error.status === 404) {
       return throwError('Something bad happened. Please try again later.');
     }

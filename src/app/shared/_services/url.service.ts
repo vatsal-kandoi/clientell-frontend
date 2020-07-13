@@ -32,9 +32,13 @@ export class UrlService {
   markFeatureCompleteUrl: string;
   acceptFeatureUrl: string;
   getOverview: string;
+  forgotPasswordUrl: string;
+  resetPasswordUrl: string;
+  refreshTokenUrl: string;
+  logoutUrl: string;
   
   constructor() {
-    this.baseUrl = `http://localhost:3000/api`;
+    this.baseUrl = `/api`;
     this.signupUrl = `${this.baseUrl}/auth/signup`;
     this.loginUrl = `${this.baseUrl}/auth/login`;
     this.allProjectsUrl = `${this.baseUrl}/user/project`;
@@ -63,5 +67,10 @@ export class UrlService {
     this.markFeatureCompleteUrl = `${this.baseUrl}/project/feature/complete`;
     this.acceptFeatureUrl = `${this.baseUrl}/project/feature/accept`
     this.getOverview = `${this.baseUrl}/user/overview`;
+
+    this.forgotPasswordUrl = `${this.baseUrl}/auth/forgotpassword`;
+    this.resetPasswordUrl = `${this.baseUrl}/auth/resetpassword`;    
+    this.refreshTokenUrl = `${this.baseUrl}/auth/refresh`;
+    this.logoutUrl = `${this.baseUrl}/auth/logout`;
   }
 }
