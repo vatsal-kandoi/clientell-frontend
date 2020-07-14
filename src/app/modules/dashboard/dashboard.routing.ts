@@ -8,7 +8,7 @@ import { ProjectDetailsComponent } from './pages/project-details/project-details
 import { AllProjectsComponent } from './pages/all-projects/all-projects.component';
 import { ProjectOverviewComponent } from './pages/project-overview/project-overview.component';
 import { 
-  AuthGuardService as AuthGuard } from '../login/_services/auth.guard';
+  AuthGuardService as AuthGuard } from '../login/_guards/auth.guard';
 
 const routes: Routes = [
   {

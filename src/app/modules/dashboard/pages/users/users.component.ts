@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActiveProjectService } from '../../shared/_services/active-project.service';
 import { FormControl } from '@angular/forms';
 import {UserService} from '../../shared/_services/user.service';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-users',
@@ -14,25 +15,17 @@ export class UsersComponent implements OnInit {
   access: string;
 
   userQuery: FormControl;
-  constructor(private activeProject: ActiveProjectService, private userService: UserService ) {
+  constructor(private activeProject: ActiveProjectService, private userService: UserService, private _store: Store<any>) {
+    this._store.select('UserData').subscribe(data => {
+      this.users = data.storeData.users;
+      this.access =  data.activeState.activeProjectState.access;
+    });
+
     this.usersSearched = []
     this.userQuery = new FormControl('');
   }
 
   ngOnInit(): void {
-    this.access = this.activeProject.access;
-    this.users = this.activeProject.users;
-    this.activeProject.dashboardFetched.subscribe((val) => {
-      if (val) {
-        this.users = this.activeProject.users;
-        this.access = this.activeProject.access;
-      }
-    })
-    this.activeProject.usersUpdated.subscribe((val) => {
-      if (val) {
-        this.users = this.activeProject.users;
-      }
-    });
     this.userService.userSearchCompleted.subscribe((val) => {
       if (val) {
         this.usersSearched = [];

@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import {UrlService} from '../../../shared/_services/url.service';
-import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import {AuthBackendService} from './backend.service';
 import {TokenService} from './token.service';
 import {AuthFetchedResponse} from '../../../shared/_interfaces/auth-response.interface';
 @Injectable({
@@ -13,13 +11,13 @@ export class LoginService {
   error: Subject<string>;
   completedAuthRequest: Subject<boolean>;
   
-  constructor(private url: UrlService, private http: HttpClient, private router: Router, private token: TokenService) {
+  constructor(private backend: AuthBackendService, private router: Router, private token: TokenService) {
     this.error = new Subject();
     this.completedAuthRequest = new Subject();
   }
 
   signup(name, email, password) {    
-    this.http.post(this.url.signupUrl, {name: name, email: email, password: password}).subscribe((data: AuthFetchedResponse) => {
+    this.backend.signup(name, email, password).subscribe((data: AuthFetchedResponse) => {
       this.completedAuthRequest.next(true);
 
       if (data.success == true) {
@@ -34,7 +32,7 @@ export class LoginService {
     });
   }
   login(email, password) {
-    this.http.post(this.url.loginUrl, {email, password}).subscribe((data: AuthFetchedResponse) => {
+    this.backend.login(email, password).subscribe((data: AuthFetchedResponse) => {
       this.completedAuthRequest.next(true);
       if (data.success == true) {
         this.token.setToken(data.access_token);
@@ -56,11 +54,8 @@ export class LoginService {
   }
 
   async logout() {
+    await this.backend.logout();
     this.token.deleteTokens();
     this.router.navigate(['/auth/login']);
-  }
-
-  isLoggedIn() {
-    return this.token.isAuthenticated();
   }
 }

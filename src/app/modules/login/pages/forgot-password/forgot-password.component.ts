@@ -10,12 +10,23 @@ import { LoginService } from '../../_services/login.service';
 export class ForgotPasswordComponent implements OnInit {
   email: FormControl;
   fetchedResponse: boolean;
+  error: string;
   constructor(private auth: LoginService) {
     this.email = new FormControl('');
     this.fetchedResponse = true;
   }
 
   ngOnInit(): void {
+    this.auth.error.subscribe((val) => {
+      if (val != '') {
+        this.error = val;
+      }
+    });
+    this.auth.completedAuthRequest.subscribe((val) => {
+      if (val) {
+        this.fetchedResponse = true;
+      }
+    })
   }
   sendMail() {
 

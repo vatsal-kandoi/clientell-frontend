@@ -12,7 +12,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
-
 @NgModule({
   declarations: [SignInComponent, SignUpComponent, ForgotPasswordComponent, ResetPasswordComponent],
   imports: [
@@ -23,8 +22,6 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
     FormsModule,   
     MatInputModule,
     MatButtonModule,
-  ],
-  providers: [
   ]
 })
 export class LoginModule { }

@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { UrlService } from 'src/app/shared/_services/url.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {DashboardBackendService} from './backend.service';
+import { Store } from '@ngrx/store';
 
 @Injectable({
   providedIn: 'root'
@@ -12,107 +14,27 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ActiveProjectService {
   activeProjectID: string;
   access: string;
-  name: string;
-  features: any[];
-  users: any[];
-  issues: any[];
-  links: any[];
-  closed: any;
-
-  dashboardFetched: Subject<boolean>;
-  usersUpdated: Subject<boolean>;
-  featuresUpdated: Subject<boolean>;
-  issuesUpdated: Subject<boolean>;
-  linksUpdated: Subject<boolean>;
-
-  constructor(private projectsService: ProjectsService, private http: HttpClient, private url: UrlService, private router: Router, private snackBar: MatSnackBar) {
-    this.activeProjectID = this.projectsService.activeProjectID;    
-    this.fetchProjectDashboard();
-    this.projectsService.activeProject.subscribe((val) => {
-      if (val) {
-        this.activeProjectID = this.projectsService.activeProjectID;    
+  constructor(private backend: DashboardBackendService, private projectsService: ProjectsService, private http: HttpClient, private url: UrlService, private router: Router, private snackBar: MatSnackBar, private _store: Store<any>) {
+    this._store.select('UserData').subscribe(data => {
+      if ( data.activeState.activeProjectId != null && data.activeState.activeProjectId != this.activeProjectID) {
+        this.activeProjectID = data.activeState.activeProjectId;          
         this.fetchProjectDashboard();
-      }
+        this.access = data.activeState.activeProjectState.access;
+      }       
     });
-    this.dashboardFetched = new Subject();
-    this.usersUpdated = new Subject();
-    this.featuresUpdated = new Subject();
-    this.issuesUpdated = new Subject();
-    this.linksUpdated = new Subject();
   }
 
-  removeUser(email: string) {
-    let temp = [];
-    this.users.forEach((element) => {
-      if (element.user.email != email) {
-        temp.push(element);
-      }
-    })
-    this.users = JSON.parse(JSON.stringify(temp));
-    this.usersUpdated.next(true);
-  }
-
-  addUser(name, email, role, id) {
-    this.users.push({
-      access: role, 
-      user: {
-        name, 
-        email,
-        _id: id
-      }
-    });
-    this.usersUpdated.next(true);
-  }
-
-  addFeature(description: string, dueDate: Date) {
-    this.http.post(this.url.addFeatureToProjectUrl, {'description': description, 'deadline': new Date(dueDate), 'projectId': this.activeProjectID}).subscribe((val: any) => {
+  /******************LINKS ******************************/
+  addLink(description, link) {
+    this.backend.addLink(description, link, this.activeProjectID).subscribe((val: any) => {
       if (val.code == 200) {
-        this.features.push({
-          _id: val.id,
-          accepted: {value: false, by: null},
-          completed: {value: false, by: null},
-          deadline: new Date(dueDate),
-          description,
-          status: 'incomplete',
-        })
-        this.featuresUpdated.next(true);
-      } else {
-        let snackBarRef = this.snackBar.open("Error adding the feature", "Try again");
-        snackBarRef.onAction().subscribe(() => {
-          this.addFeature(description, dueDate);
-        });
-      }
-    });
-  }
-
-  removeFeature(id) {
-    this.http.post(this.url.removeFeatureToProjectUrl, {'featureId': id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
-      if (val.code == 200) {
-        let temp = [];
-        this.features.forEach((element) => {
-          if (element._id != id) {
-            temp.push(element);
+        this._store.dispatch({
+          type: 'ADD_LINK',
+          payload: {
+            for: description,
+            link,
           }
         })
-        this.features = JSON.parse(JSON.stringify(temp));
-        this.featuresUpdated.next(true);
-      } else {
-        let snackBarRef = this.snackBar.open("Error removing the feature", "Try again");
-        snackBarRef.onAction().subscribe(() => {
-          this.removeFeature(id);
-        });
-      }
-    });
-  }
-
-  addLink(description, link) {
-    this.http.post(this.url.addLinkUrl, {'linkFor': description, 'link': link, 'projectId': this.activeProjectID}).subscribe((val: any) => {
-      if (val.code == 200) {
-        this.links.push({
-          for: description,
-          link
-        });
-        this.linksUpdated.next(true);
       } else {
         let snackBarRef = this.snackBar.open("Error adding the link", "Try again");
         snackBarRef.onAction().subscribe(() => {
@@ -123,16 +45,12 @@ export class ActiveProjectService {
   }
 
   removeLink(link_id) {
-    this.http.post(this.url.removeUrl, {'linkFor': link_id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
+    this.backend.deleteLink(link_id, this.activeProjectID).subscribe((val: any) => {
       if (val.code == 200) {
-        let temp = [];
-        this.links.forEach((element) => {
-          if (element.for != link_id) {
-            temp.push(element);
-          }
+        this._store.dispatch({
+          type: 'REMOVE LINK',
+          payload: link_id
         })
-        this.links = JSON.parse(JSON.stringify(temp));
-        this.linksUpdated.next(true);
       } else {
         let snackBarRef = this.snackBar.open("Error removing the link", "Try again");
         snackBarRef.onAction().subscribe(() => {
@@ -141,18 +59,18 @@ export class ActiveProjectService {
       }
     })
   }
-  addIssue(description: string) {
-    this.http.post(this.url.addIssueToProjectUrl, {'description': description, 'projectId': this.activeProjectID}).subscribe((val: any) => {
-      if (val.code == 200) {
-        this.issues.push({
-          _id: val.id,
-          closed: {value: false, by: null},
-          accepted: {value: false, by: null},
-          description,
-          status: 'incomplete',
-        });
 
-        this.issuesUpdated.next(true);
+  /****************************ISSUES **********************************/
+  addIssue(description: string) {
+    this.backend.addIssue(description, this.activeProjectID).subscribe((val: any) => {
+      if (val.code == 200) {
+        this._store.dispatch({
+          type: 'ADD_ISSUE',
+          payload: {
+            id: val.id, description
+          }
+        })
+
       } else {
         let snackBarRef = this.snackBar.open("Error adding the issue", "Try again");
         snackBarRef.onAction().subscribe(() => {
@@ -163,16 +81,12 @@ export class ActiveProjectService {
   }
 
   removeIssue(id) {
-    this.http.post(this.url.removeIssueToProjectUrl, {'issueId': id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
+    this.backend.deleteIssue(id, this.activeProjectID).subscribe((val: any) => {
       if (val.code == 200) {
-        let temp = [];
-        this.issues.forEach((element) => {
-          if (element._id != id) {
-            temp.push(element);
-          }
+        this._store.dispatch({
+          type: 'REMOVE_ISSUE',
+          payload: id
         })
-        this.issues = JSON.parse(JSON.stringify(temp));
-        this.issuesUpdated.next(true);
       } else {
         let snackBarRef = this.snackBar.open("Error removing the issue", "Try again");
         snackBarRef.onAction().subscribe(() => {
@@ -181,71 +95,64 @@ export class ActiveProjectService {
       }
     });
   }
+
   changeStatusIssue(status, id) {
-    if (status == 'accept') {
-      this.http.post(this.url.acceptIssueUrl, {'issueId': id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
-        if (val.code == 200) {
-          this.issues.forEach((element) => {
-            if (element._id == id) {
-              element.accepted.value = true;
-            }
-          })
-        }
-        console.log(val);
-      });
-    } else if (status == 'reject') {
-      this.http.post(this.url.rejectIssueUrl, {'issueId': id, 'projectId': this.activeProjectID}).subscribe((val: any) => {
-        if (val.code == 200) {
-          this.issues.forEach((element) => {
-            if (element._id == id) {
-              element.accepted.value = false;
-              element.closed.value = false;
-            }
-          })
-        }
-      });
-    }
-  }
-  fetchProjectDashboard() {
-    if (this.activeProjectID == undefined) return;
-    this.http.post(this.url.allProjectsUrl, {'projectId': this.activeProjectID}).subscribe((val: any) => {
+   this.backend.changeStatusIssue(status, id, this.activeProjectID).subscribe((val: any) => {
       if (val.code == 200) {
-        this.access = val.access;
-        this.name = val.name;
-        this.features = val.features;
-        this.issues = val.issues;
-        this.links = val.links;
-        this.users = val.users;
-        this.closed = val.closed;
-        this.dashboardFetched.next(true);
-      } else {
-        let snackBarRef = this.snackBar.open("Error fetching the project dashboard", "Reload");
-        snackBarRef.onAction().subscribe(() => {
-          this.fetchProjectDashboard();      
-        });
-        this.dashboardFetched.next(false);
+        this._store.dispatch({
+          type: 'CHANGE_ACCEPTANCE_ISSUE',
+          payload: {
+            status, id
+          }
+        })
       }
     });
   }
 
-  closeProject() {
-    this.http.post(this.url.closeProjectUrl, {'projectId': this.activeProjectID, 'projectAccess': this.access}).subscribe((val: any) => {
+  closeIssue(id, status) {
+    this.backend.closeIssue(id, status, this.activeProjectID).subscribe((val: any) => {
       if (val.code == 200) {
-        this.projectsService.switchStatus(this.activeProjectID);
+        this._store.dispatch({
+          type: 'CHANGE_COMPLETE_ISSUE',
+          payload: {
+            id, status
+          }
+        })
+      }
+    });
+  }
+
+  /****************************PROJECT OPTIONS* **************************/
+  closeProject() {
+    this.backend.closeProject(this.activeProjectID, this.access).subscribe((val: any) => {
+      if (val.code == 200) {
+        if (this.access == 'admin') {
+          this._store.dispatch({
+            type: 'CLOSE_PROJECT_ADMIN',
+            payload: {}
+          })
+        } else {
+          this._store.dispatch({
+            type: 'CLOSE_PROJECT_CLIENT',
+            payload: {}
+          })
+        }
       } else {
         let snackBarRef = this.snackBar.open("Error closing the project", "Try again");
         snackBarRef.onAction().subscribe(() => {
           this.closeProject();
         });
-        this.dashboardFetched.next(false);
       }
     })
   }
 
   deleteProject() {
-    this.http.post(this.url.deleteProjectUrl, {'projectId': this.activeProjectID}).subscribe((val: any) => {
+    this.backend.deleteProject(this.activeProjectID).subscribe((val: any) => {
       if (val.code == 200) {
-        this.projectsService.removeProject(this.activeProjectID);
+        this._store.dispatch({
+          type: 'DELETE_PROJECT',
+          payload: {}
+        })
         this.router.navigate(['/dashboard/projects']);
       } else {
         let snackBarRef = this.snackBar.open("Error deleting the project", "Try again");
@@ -256,18 +163,16 @@ export class ActiveProjectService {
     })
   }
 
+  /*******************FEATURES **************************************/
   acceptFeature(id, status) {
-    this.http.post(this.url.acceptFeatureUrl, {'status': status, 'projectId': this.activeProjectID, 'featureId': id}).subscribe((val: any) => {
+    this.backend.acceptFeature(id, status, this.activeProjectID).subscribe((val: any) => {
       if (val.code == 200) {
-        this.features.forEach((element) => {
-          if (element._id == id) {
-            element.accepted.value = status;
-            if (!status) {
-              element.completed.value = false;
-            }
+        this._store.dispatch({
+          type: 'CHANGE_ACCEPTANCE_FEATURE',
+          payload: {
+            id, status
           }
         });
-        this.featuresUpdated.next(true);
       } else {
 
       }
@@ -275,48 +180,81 @@ export class ActiveProjectService {
   }
 
   markCompleteFeature(id, status) {
-    this.http.post(this.url.markFeatureCompleteUrl, {'status': status, 'projectId': this.activeProjectID, 'featureId': id}).subscribe((val: any) => {
+    this.backend.markFeature(id, status, this.activeProjectID).subscribe((val: any) => {
       if (val.code == 200) {
-        this.features.forEach((element) => {
-          if (element._id == id) {
-            element.completed.value = status;
+        this._store.dispatch({
+          type: 'CHANGE_COMPLETE_FEATURE',
+          payload: {
+            id,
+            status,
           }
-        });
-        this.featuresUpdated.next(true);
-      } else {
+        })
+       } else {
 
       }
     })
   }
 
-  closeIssue(id, status) {
-    if (status) {
-      this.http.post(this.url.completeIssueUrl, {'projectId': this.activeProjectID, 'issueId': id}).subscribe((val: any) => {
-        if (val.code == 200) {
-          this.issues.forEach((element) => {
-            if (element._id == id) {
-              element.closed.value = status;
-            }
-          });
-          this.issuesUpdated.next(true);
-        } else {
+  addFeature(description: string, dueDate: Date) {
+    this.backend.addFeature(description, dueDate, this.activeProjectID).subscribe((val: any) => {
+      if (val.code == 200) {
+        this._store.dispatch({
+          type: 'ADD_FEATURE',
+          payload: {
+            id: val.id,
+            dueDate,
+            description
+          }
+        })
+      } else {
+        let snackBarRef = this.snackBar.open("Error adding the feature", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.addFeature(description, dueDate);
+        });
+      }
+    });
+  }
 
-        }
-      });
-    } else {
-      this.http.post(this.url.incompleteIssueUrl, {'projectId': this.activeProjectID, 'issueId': id}).subscribe((val: any) => {
-        if (val.code == 200) {
-          this.issues.forEach((element) => {
-            if (element._id == id) {
-              element.closed.value = status;
-            }
-          });
-          this.issuesUpdated.next(true);
-        } else {
+  removeFeature(id) {
+    this.backend.deleteFeature(id, this.activeProjectID).subscribe((val: any) => {
+      if (val.code == 200) {
+        let temp = [];
+        this._store.dispatch({
+          type: 'REMOVE_FEATURE',
+          payload: id
+        });
+      } else {
+        let snackBarRef = this.snackBar.open("Error removing the feature", "Try again");
+        snackBarRef.onAction().subscribe(() => {
+          this.removeFeature(id);
+        });
+      }
+    });
+  }
 
-        }
-      })      
-    }
-
+  /****************FETCHING ALL DETAILS *********************/
+  fetchProjectDashboard() {
+    if (this.activeProjectID == undefined || this.activeProjectID == null) return;
+    this.backend.fetchProjectDashboard(this.activeProjectID).subscribe((val: any) => {
+      if (val.code == 200) {
+        this._store.dispatch({
+          type: 'SET_PROJECT_OVERVIEW',
+          payload: {
+            access: val.access,
+            name: val.name,
+            features: val.features,
+            issues: val.issues,
+            links: val.links,
+            users: val.users,
+            closed: val.closed
+          }
+        });
+      } else {
+        let snackBarRef = this.snackBar.open("Error fetching the project dashboard", "Reload");
+        snackBarRef.onAction().subscribe(() => {
+          this.fetchProjectDashboard();      
+        });
+      }
+    });
   }
 }

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient } from '@angular/common/http';
-import { UrlService } from '../../../../shared/_services/url.service';
 import { Subject } from 'rxjs';
 import { ActiveProjectService } from './active-project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DashboardBackendService } from './backend.service';
+import { Store } from '@ngrx/store';
 
 
 @Injectable({
@@ -13,14 +13,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class UserService {
   userSearchCompleted: Subject<boolean>;
   searchResults: any[];
-  constructor(private http: HttpClient, private url: UrlService, private activeProject: ActiveProjectService, private snackBar: MatSnackBar) {
+  constructor(private backend: DashboardBackendService, private activeProject: ActiveProjectService, private snackBar: MatSnackBar, private _store: Store<any>) {
     this.userSearchCompleted = new Subject();
   }
 
   deleteUser(email) {
-    this.http.post(this.url.removeUserToProjectUrl, {'projectId': this.activeProject.activeProjectID, 'emailToRemove': email}).subscribe((val: any) => {
+    this.backend.deleteUser(email, this.activeProject.activeProjectID).subscribe((val: any) => {
       if (val.code == 200) {
-        this.activeProject.removeUser(email);
+        this._store.dispatch({
+          type: 'REMOVE_USER',
+          payload: email
+        });
       } else {
         let snackBarRef = this.snackBar.open("Error removing the user from the projects", "Try again");
         snackBarRef.onAction().subscribe(() => {
@@ -31,9 +34,17 @@ export class UserService {
   }
 
   addUserToProject(role, name ,email) {
-    this.http.post(this.url.addUserToProjectUrl, {'projectId': this.activeProject.activeProjectID, 'emailToAdd': email, mode: role}).subscribe((val: any) => {
+    this.backend.addUser(role, email, name, this.activeProject.activeProjectID).subscribe((val: any) => {
       if (val.code == 200) {
-        this.activeProject.addUser(name, email, role, val.id);
+        this._store.dispatch({
+          type: 'ADD_USER',
+          payload: {
+            name: name, 
+            email: email,
+            id: val.id, 
+            role: role
+          }
+        })
       } else {
         let snackBarRef = this.snackBar.open("Error adding the user to the projects", "Try again");
         snackBarRef.onAction().subscribe(() => {
@@ -44,7 +55,7 @@ export class UserService {
   }
 
   searchForUser(query) {
-    this.http.post(this.url.userSearchUrl, {'query': query}).subscribe((val: any) => {
+    this.backend.searchUser(query).subscribe((val: any) => {
       if (val.code == 200) {
         this.searchResults = val.users;
         this.userSearchCompleted.next(true);

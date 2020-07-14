@@ -40,7 +40,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DatePipe } from './shared/_pipes/date.pipe';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import { AuthGuardService } from '../login/_services/auth.guard';
+import { AuthGuardService } from '../login/_guards/auth.guard';
 import { ConfirmMobileComponent } from './components/confirm/confirm-mobile/confirm-mobile.component';
 import { ConfirmDesktopComponent } from './components/confirm/confirm-desktop/confirm-desktop.component';
 import { TopNavbarComponent } from './components/top-navbar/top-navbar.component';

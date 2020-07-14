@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { 
-  AuthGuardService as AuthGuard } from './modules/login/_services/auth.guard';
-import {LoggedinGuardService} from './modules/login/_services/loggedin.guard';
+  AuthGuardService as AuthGuard } from './modules/login/_guards/auth.guard';
+import {LoggedinGuardService} from './modules/login/_guards/loggedin.guard';
 const routes: Routes = [
   {
     path: '',

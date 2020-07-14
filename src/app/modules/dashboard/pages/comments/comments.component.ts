@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommentService } from '../../shared/_services/comment.service';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-comments',
@@ -21,47 +22,22 @@ export class CommentsComponent implements OnInit {
   type: string;
   closed: boolean;
   isLoaded: boolean;
-  constructor(private commentService: CommentService, private route: ActivatedRoute) {
+  constructor(private commentService: CommentService, private route: ActivatedRoute, private _store: Store<any>) {
+    this._store.select('UserData').subscribe(data => {
+      this.comments = data.storeData.comments;
+      this.description = data.storeData.commentDescription.description;
+      this.type = data.activeState.activeComponentType;
+      this.accepted = data.storeData.commentDescription.accepted;
+      this.addedOn = data.storeData.commentDescription.addedOn;
+      this.completed = data.storeData.commentDescription.completed;
+      this.closed = data.storeData.commentDescription.closed;
+      this.isLoaded = true;
+    })
     this.isLoaded = false;
+    this.commentService.getComments();
     this.userComment = new FormControl('');
   }
   ngOnInit(): void {
-    this.commentService.getComments();
-    this.commentService.commentsFetched.subscribe((val) => {
-      if (val) {
-        this.type = this.commentService.activeType;
-
-        let data = this.commentService.data;
-  
-        this.description = data.description;
-        this.addedOn = data.addedOn;
-        this.addedOn = new Date(this.addedOn);
-  
-        this.addedOn = this.addedOn.toLocaleDateString();
-  
-        if (this.type == 'feature') {
-          this.accepted = data.accepted.value;
-          this.completed = data.completed.value;
-        } else {
-          this.closed = data.closed.value;
-        }
-        this.userEmail = this.commentService.userEmail;
-        this.comments = data.comments;
-        this.isLoaded = true;
-      } else {
-        const issueId: string = this.route.snapshot.queryParamMap.get('issueId');
-        const featureId: string = this.route.snapshot.queryParamMap.get('featureId');
-        if (issueId == null) {
-          this.commentService.activeType = 'feature';
-          this.commentService.activeID = featureId;
-          this.commentService.getComments();
-        } else {
-          this.commentService.activeType = 'issue';
-          this.commentService.activeID = issueId;
-          this.commentService.getComments();
-        }
-      }
-    });
   }
   addComment() {
     if (this.userComment.value == '') return;

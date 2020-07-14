@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActiveProjectService } from '../../shared/_services/active-project.service';
 import {CommentService} from '../../shared/_services/comment.service';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-project-details',
@@ -16,40 +17,18 @@ export class ProjectDetailsComponent implements OnInit {
   closed: any;
 
   constructor(private activeProject: ActiveProjectService, private commentService: CommentService,
-    private router: Router ) {
+    private router: Router, private _store: Store<any>) {
+      this._store.select('UserData').subscribe(data => {
+        this.links = data.storeData.links;
+        this.features = data.storeData.features;
+        this.issues = data.storeData.issues;        
+        this.access =  data.activeState.activeProjectState.access;
+        this.closed = data.activeState.activeProjectState.closed;
+      });
+    this.activeProject.fetchProjectDashboard();
   }
 
   ngOnInit(): void {
-    this.access = this.activeProject.access;
-    this.features = this.activeProject.features;
-    this.issues = this.activeProject.issues;
-    this.links = this.activeProject.links;
-    this.closed = this.activeProject.closed;
-
-    this.activeProject.dashboardFetched.subscribe((val) => {
-      if (val) {
-        this.access = this.activeProject.access;
-        this.features = this.activeProject.features;
-        this.issues = this.activeProject.issues;
-        this.links = this.activeProject.links;
-        this.closed = this.activeProject.closed;
-      }
-    });
-    this.activeProject.featuresUpdated.subscribe((val) => {
-      if (val) {
-        this.features = this.activeProject.features;
-      }
-    });
-    this.activeProject.issuesUpdated.subscribe((val) => {
-      if (val) {
-        this.issues = this.activeProject.issues;
-      }
-    });
-    this.activeProject.linksUpdated.subscribe((val) => {
-      if (val) {
-        this.links = this.activeProject.links;
-      }
-    })
   }
 
   delete(type: string, id: string) {

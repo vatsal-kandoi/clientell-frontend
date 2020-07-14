@@ -7,7 +7,7 @@
             <ng-container *ngIf="showProject">
                 <ng-container *ngIf="projects.length < 6">
                     <ng-container *ngFor="let project of projectsToShow">
-                        <project-navbar (click)="openProject(project._id)" class="project column" [active]="project.closed.admin.value" [name]="project.name" [letter]="project.letter"></project-navbar>
+                        <project-navbar (click)="openProject(project._id)" class="project column" [active]="project.closed.admin.value" [name]="project.name" [letter]="project.name[0]"></project-navbar>
                     </ng-container>
                     <project-navbar (click)="addProject()" class="project column" [name]="'Add projects'" [letter]="'+'"></project-navbar>
                 </ng-container>

@@ -17,7 +17,9 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler):  Observable<HttpEvent<any>> {
-    if (request.url.includes('/auth/login') || request.url.includes('/auth/signup')) {
+    if (request.url.includes('/auth/login') || request.url.includes('/auth/signup') || request.url.includes('/auth/forgotpassword')
+      || request.url.includes('/auth/resetpassword') || request.url.includes('/home')
+    ) {
       return next.handle(request).pipe(catchError(this.handleError));      
     }
     let token = this.token.fetchToken();

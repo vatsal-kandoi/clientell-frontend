@@ -9,6 +9,7 @@ import { AddItemMobileComponent } from '../../components/add-item/add-item-mobil
 import {ActiveProjectService} from '../../shared/_services/active-project.service';
 import { ConfirmMobileComponent } from '../../components/confirm/confirm-mobile/confirm-mobile.component';
 import { ConfirmDesktopComponent } from '../../components/confirm/confirm-desktop/confirm-desktop.component';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-project-overview',
@@ -27,9 +28,17 @@ export class ProjectOverviewComponent implements OnInit {
   errorGettingParam: any;
   showReload: boolean;
   constructor(private router: Router, private projectsService: ProjectsService,
-    private bottomSheet: MatBottomSheet, private displaySize: DisplaySizeService, private dialog: MatDialog, private activeProject: ActiveProjectService, private route: ActivatedRoute
-    ) {
+    private bottomSheet: MatBottomSheet, private displaySize: DisplaySizeService, private dialog: MatDialog, private activeProject: ActiveProjectService, private route: ActivatedRoute, private _store: Store<any>) {
       this.loadingContent = true;
+      this._store.select('UserData').subscribe(data => {
+        this.users = data.storeData.users;
+        this.usersToShow = JSON.parse(JSON.stringify(this.users)).splice(0,2)
+        this.access =  data.activeState.activeProjectState.access;
+        this.closed = data.activeState.activeProjectState.closed;
+        this.name = data.activeState.activeProjectState.name;
+        this.loadingContent = false;
+      });
+
       this.errorGettingParam = false;
       this.showReload = false;
       if (this.activeProject.activeProjectID == undefined) {
@@ -40,24 +49,6 @@ export class ProjectOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activeProject.dashboardFetched.subscribe((val) => {
-      if (val == true) {
-        this.name = this.activeProject.name;
-        this.users = this.activeProject.users;
-        this.usersToShow = JSON.parse(JSON.stringify(this.users)).splice(0,2);
-        this.access = this.activeProject.access;
-        this.closed = this.activeProject.closed;
-        this.loadingContent = false;
-      } else {
-        this.showReload = true;
-        this.router.navigate(['/dashboard']);
-      }
-    })
-    this.activeProject.usersUpdated.subscribe((val) => {
-      if (val) {
-        this.users = this.activeProject.users;
-      }
-    });
   }
 
   navigate(direction: string) {

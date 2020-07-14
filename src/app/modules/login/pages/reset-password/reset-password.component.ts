@@ -11,6 +11,8 @@ export class ResetPasswordComponent implements OnInit {
   password: FormControl;
   password2: FormControl;
   fetchedResponse: boolean;
+  error: string;
+
   constructor(private auth: LoginService) {
     this.password = new FormControl('');
     this.password2 = new FormControl('');
@@ -18,7 +20,16 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  }
+    this.auth.error.subscribe((val) => {
+      if (val != '') {
+        this.error = val;
+      }
+    });
+    this.auth.completedAuthRequest.subscribe((val) => {
+      if (val) {
+        this.fetchedResponse = true;
+      }
+    })  }
   reset() {
 
   }

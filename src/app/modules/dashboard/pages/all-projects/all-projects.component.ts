@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddProjectDesktopComponent } from '../../components/add-project/add-project-desktop/add-project-desktop.component';
 import { AddProjectMobileComponent } from '../../components/add-project/add-project-mobile/add-project-mobile.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'all-projects',
@@ -15,36 +16,21 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 export class AllProjectsComponent implements OnInit {
   projects: any[];
   isLoaded: boolean;
-  constructor(private projectsService: ProjectsService, private router: Router, private bottomSheet: MatBottomSheet ,private displaySize: DisplaySizeService, private dialog: MatDialog) {
+  constructor(private projectsService: ProjectsService, private router: Router, private bottomSheet: MatBottomSheet ,private displaySize: DisplaySizeService, private dialog: MatDialog, private _store: Store<any>) {
+    this._store.select('UserData').subscribe(data => {
+        this.projects = data.storeData.allProjects;
+        this.isLoaded = true;
+    });
     this.isLoaded = false;
   }
 
   ngOnInit(): void {
-    if (this.projectsService.projects == undefined) this.projectsService.fetchAllProjects();
-    else {
-      this.projects = this.projectsService.projects;
-      this.isLoaded = true;
-    }
-
-    this.projectsService.projectFetched.subscribe((val) => {
-      if (val == true) {
-        this.projects = this.projectsService.projects;
-        this.isLoaded = true;
-      }
-    });
-
-    this.projectsService.projectAdded.subscribe((val) => {
-      if (val == true) {
-        this.projects = this.projectsService.projects;
-        this.isLoaded = true;
-      } else {
-
-      }
-    });
-
   }
   openProject(id: string) {
-    this.projectsService.setActiveProject(id);
+    this._store.dispatch({
+      type: 'SET_ACTIVE_PROJECT',
+      payload: id,
+    });
     this.router.navigate(['/dashboard/project'], {queryParams: {projectId: id}});
   }
   addProject() {

@@ -4,67 +4,39 @@ import { HttpClient } from '@angular/common/http';
 import { UrlService } from 'src/app/shared/_services/url.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DashboardBackendService } from './backend.service';
+import { Store } from '@ngrx/store';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
-  projectAdded: Subject<boolean>;
-  projectFetched: Subject<boolean>;
-  activeProject: Subject<string>;
   activeProjectID: string;
   projects: any[];
   
   userName: string;
   userEmail: any;
 
-  constructor(private http: HttpClient, private url: UrlService, private router: Router, private snackBar: MatSnackBar) {
-    this.projectAdded = new Subject();
-    this.activeProject = new Subject();
-    this.projectFetched = new Subject();
+  constructor(private backend: DashboardBackendService, private router: Router, private snackBar: MatSnackBar, private _store: Store<any>) {
   }
-
-  switchStatus(id) {
-    this.projects.forEach((element) => {
-      if (element._id == id) {
-        element.closed.admin.value = true;
-      }
+  setActiveProject(id) {
+    this._store.dispatch({
+      type: 'SET_ACTIVE_PROJECT',
+      payload: id,
     });
-    this.projectFetched.next(true);
+    this.router.navigate(['/dashboard/project'], {queryParams: {projectId: id}});
   }
-
-  setActiveProject(id: string) {
-    this.activeProjectID = id;
-    this.activeProject.next(this.activeProjectID);
-  }
-
-  removeProject(id) {
-    let temp = [];
-    this.projects.forEach((element) => {
-      if (element._id != id) {
-        temp.push(element);
-      } 
-    });
-    this.projects = JSON.parse(JSON.stringify(temp));
-    this.projectAdded.next(true);
-  }
-
   addProject(name: string) {
-    this.http.post(this.url.addProjectUrl, {'name': name}).subscribe((val: any) => {
+    this.backend.addProject(name).subscribe((val: any) => {
       if (val.code == 200) {
-        this.projects.push({
-          name: name,
-          closed: {
-            admin: {value: false, by: null},
-            client: {value: false, by: null},
-          },
-          letter: name[0],
-          _id: val.id
-        });
-        this.projectAdded.next(true);
-        this.activeProjectID = val.id;
-        this.activeProject.next(this.activeProjectID);
+        this._store.dispatch({
+          type: 'ADD_PROJECT',
+          payload: {
+            id: val.id,
+            name
+          }
+        })
         this.router.navigate(['/dashboard/project'], {queryParams: {projectId: this.activeProjectID}});
       } else {
         let snackBarRef = this.snackBar.open("Error adding the project", "Try again");
@@ -76,15 +48,18 @@ export class ProjectsService {
   }
 
   fetchAllProjects() {
-    return this.http.get(this.url.allProjectsUrl).subscribe((val: any) => {
+    this.backend.getAllProjects().subscribe((val: any) => {
       if (val.code == 200) {
-        this.projects = [];
-        val.projects.forEach(element => {
-          this.projects.push({...element, letter: element.name[0]});
+        this._store.dispatch({
+          type: 'SET_ALL_PROJECTS',
+          payload: {
+            projects: val.projects,
+            user: {
+              name: val.name,
+              email: val.email
+            }
+          }
         });
-        this.userName = val.name;
-        this.userEmail = val.email;
-        this.projectFetched.next(true);
       } else {
         let snackBarRef = this.snackBar.open("Error fetching the projects", "Try again");
         snackBarRef.onAction().subscribe(() => {
