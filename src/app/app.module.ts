@@ -11,7 +11,7 @@ import {LoggedinGuardService} from './modules/login/_guards/loggedin.guard';
 import { TokenService } from './modules/login/_services/token.service';
 import { StoreModule } from '@ngrx/store';
 import { AccessToken } from './modules/login/redux/access-token.reducer';
-import {UserData} from './modules/dashboard/shared/redux/projects.reducer';
+import {UserStateData, UserDataStore} from './modules/dashboard/shared/redux/projects.reducer';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,7 @@ import {UserData} from './modules/dashboard/shared/redux/projects.reducer';
     BrowserAnimationsModule,
     BrowserModule,
     HttpClientModule,
-    StoreModule.forRoot({ AccessToken, UserData })    
+    StoreModule.forRoot({ AccessToken, UserStateData, UserDataStore })    
   ],
   providers: [
     AuthGuardService,

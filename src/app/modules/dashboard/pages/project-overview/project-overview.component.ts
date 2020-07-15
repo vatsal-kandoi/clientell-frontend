@@ -30,12 +30,15 @@ export class ProjectOverviewComponent implements OnInit {
   constructor(private router: Router, private projectsService: ProjectsService,
     private bottomSheet: MatBottomSheet, private displaySize: DisplaySizeService, private dialog: MatDialog, private activeProject: ActiveProjectService, private route: ActivatedRoute, private _store: Store<any>) {
       this.loadingContent = true;
-      this._store.select('UserData').subscribe(data => {
-        this.users = data.storeData.users;
+      this._store.select('UserDataStore').subscribe(data => {
+        this.users = data.users;
         this.usersToShow = JSON.parse(JSON.stringify(this.users)).splice(0,2)
-        this.access =  data.activeState.activeProjectState.access;
-        this.closed = data.activeState.activeProjectState.closed;
-        this.name = data.activeState.activeProjectState.name;
+      });
+  
+      this._store.select('UserStateData').subscribe(data => {        
+        this.access =  data.activeProjectState.access;
+        this.closed = data.activeProjectState.closed;
+        this.name = data.activeProjectState.name;
         this.loadingContent = false;
       });
 

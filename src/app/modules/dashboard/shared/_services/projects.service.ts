@@ -15,15 +15,17 @@ export class ProjectsService {
   activeProjectID: string;
   projects: any[];
   
-  userName: string;
-  userEmail: any;
-
   constructor(private backend: DashboardBackendService, private router: Router, private snackBar: MatSnackBar, private _store: Store<any>) {
+    this._store.select('UserStateData').subscribe((data) => {
+      if (data.activeProjectId != null && data.activeProjectId != this.activeProjectID){
+        this.activeProjectID = data.activeProjectId;
+      }
+    })
   }
   setActiveProject(id) {
     this._store.dispatch({
       type: 'SET_ACTIVE_PROJECT',
-      payload: id,
+      payload: {id},
     });
     this.router.navigate(['/dashboard/project'], {queryParams: {projectId: id}});
   }
@@ -36,7 +38,13 @@ export class ProjectsService {
             id: val.id,
             name
           }
-        })
+        });
+        this._store.dispatch({
+          type: 'SET_ACTIVE_PROJECT',
+          payload: {
+            id: val.id,
+          }
+        });      
         this.router.navigate(['/dashboard/project'], {queryParams: {projectId: this.activeProjectID}});
       } else {
         let snackBarRef = this.snackBar.open("Error adding the project", "Try again");
@@ -51,13 +59,16 @@ export class ProjectsService {
     this.backend.getAllProjects().subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
+          type: 'SET_USER',
+          payload: {
+            name: val.name,
+            email: val.email
+          }
+        })
+        this._store.dispatch({
           type: 'SET_ALL_PROJECTS',
           payload: {
             projects: val.projects,
-            user: {
-              name: val.name,
-              email: val.email
-            }
           }
         });
       } else {

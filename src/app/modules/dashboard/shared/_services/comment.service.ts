@@ -7,6 +7,7 @@ import { ProjectsService } from './projects.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { DashboardBackendService } from './backend.service';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -15,12 +16,20 @@ import { Store } from '@ngrx/store';
 export class CommentService {
   activeType: any;
   activeID: any;
+  activeProjectId: string;
   commentsFetched: Subject<boolean>;
   userEmail: string;
   data: any;
 
-  constructor(private backend: DashboardBackendService, private activeProject: ActiveProjectService, private allProjects: ProjectsService, private snackBar: MatSnackBar, private _store: Store<any>) {
-    this.userEmail = this.allProjects.userEmail;
+  constructor(private backend: DashboardBackendService, private snackBar: MatSnackBar, private _store: Store<any>,private router: Router) {
+    this._store.select('UserStateData').subscribe((data) => {
+      if (data.user.email != null && data.user.email != this.userEmail){
+        this.userEmail = data.user.email;
+      }
+      if (data.activeProjectId != null && data.activeProjectId != this.activeProjectId) {
+        this.activeProjectId = data.activeProjectId;
+      }
+    })
   }
 
   setActive(type: string, id: string) {
@@ -30,11 +39,16 @@ export class CommentService {
         type: type,
         componentId: id
       }
-    })
+    });
+    if (type == 'feature') {
+      this.router.navigate(['/dashboard/project/comments'], {queryParams: {projectId: this.activeProjectId, featureId: id}})
+      return;
+    }
+    this.router.navigate(['/dashboard/project/comments'], {queryParams: {projectId: this.activeProjectId, issueId: id}})
   }
 
   deleteComment(id) {
-    this.backend.deleteComment(id, this.activeType, this.activeProject.activeProjectID, this.activeID).subscribe((val: any) => {
+    this.backend.deleteComment(id).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'DELETE_COMMENT',
@@ -50,7 +64,7 @@ export class CommentService {
   }
 
   addComment(comment) {
-    this.backend.addComment(comment, this.activeType, this.activeProject.activeProjectID, this.activeID).subscribe((val: any) => {
+    this.backend.addComment(comment).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'ADD_COMMENT',
@@ -68,7 +82,7 @@ export class CommentService {
   }
 
   getComments() {
-    this.backend.getAllComments(this.activeType, this.activeProject.activeProjectID,this.activeID).subscribe((val: any) => {
+    this.backend.getAllComments().subscribe((val: any) => {
       if (val.code == 200) {
         if (this.activeType == 'feature'){
           this._store.dispatch({

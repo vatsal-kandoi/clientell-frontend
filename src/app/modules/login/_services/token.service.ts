@@ -49,9 +49,13 @@ export class TokenService {
 
   async deleteTokens() {
     this._store.dispatch({
-      type: 'RESET_DATA',
+      type: 'RESET_USER_DATA',
       payload: {}
-    })
+    });
+    this._store.dispatch({
+      type: 'RESET_STORE_DATA',
+      payload: {}
+    });
     this._store.dispatch({
       type: 'RESET_TOKEN',
       payload: null,

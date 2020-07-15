@@ -14,19 +14,19 @@ import { Store } from '@ngrx/store';
 export class ActiveProjectService {
   activeProjectID: string;
   access: string;
-  constructor(private backend: DashboardBackendService, private projectsService: ProjectsService, private http: HttpClient, private url: UrlService, private router: Router, private snackBar: MatSnackBar, private _store: Store<any>) {
-    this._store.select('UserData').subscribe(data => {
-      if ( data.activeState.activeProjectId != null && data.activeState.activeProjectId != this.activeProjectID) {
-        this.activeProjectID = data.activeState.activeProjectId;          
+  constructor(private backend: DashboardBackendService,  private router: Router, private snackBar: MatSnackBar, private _store: Store<any>) {
+    this._store.select('UserStateData').subscribe(data => {
+      if ( data.activeProjectId != null && data.activeProjectId != this.activeProjectID) {
+        this.activeProjectID = data.activeProjectId;          
         this.fetchProjectDashboard();
-        this.access = data.activeState.activeProjectState.access;
+        this.access = data.activeProjectState.access;
       }       
     });
   }
 
   /******************LINKS ******************************/
   addLink(description, link) {
-    this.backend.addLink(description, link, this.activeProjectID).subscribe((val: any) => {
+    this.backend.addLink(description, link).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'ADD_LINK',
@@ -45,7 +45,7 @@ export class ActiveProjectService {
   }
 
   removeLink(link_id) {
-    this.backend.deleteLink(link_id, this.activeProjectID).subscribe((val: any) => {
+    this.backend.deleteLink(link_id).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'REMOVE LINK',
@@ -62,7 +62,7 @@ export class ActiveProjectService {
 
   /****************************ISSUES **********************************/
   addIssue(description: string) {
-    this.backend.addIssue(description, this.activeProjectID).subscribe((val: any) => {
+    this.backend.addIssue(description).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'ADD_ISSUE',
@@ -81,7 +81,7 @@ export class ActiveProjectService {
   }
 
   removeIssue(id) {
-    this.backend.deleteIssue(id, this.activeProjectID).subscribe((val: any) => {
+    this.backend.deleteIssue(id).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'REMOVE_ISSUE',
@@ -97,7 +97,7 @@ export class ActiveProjectService {
   }
 
   changeStatusIssue(status, id) {
-   this.backend.changeStatusIssue(status, id, this.activeProjectID).subscribe((val: any) => {
+   this.backend.changeStatusIssue(status, id).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'CHANGE_ACCEPTANCE_ISSUE',
@@ -110,7 +110,7 @@ export class ActiveProjectService {
   }
 
   closeIssue(id, status) {
-    this.backend.closeIssue(id, status, this.activeProjectID).subscribe((val: any) => {
+    this.backend.closeIssue(id, status).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'CHANGE_COMPLETE_ISSUE',
@@ -124,7 +124,7 @@ export class ActiveProjectService {
 
   /****************************PROJECT OPTIONS* **************************/
   closeProject() {
-    this.backend.closeProject(this.activeProjectID, this.access).subscribe((val: any) => {
+    this.backend.closeProject( this.access).subscribe((val: any) => {
       if (val.code == 200) {
         if (this.access == 'admin') {
           this._store.dispatch({
@@ -147,7 +147,7 @@ export class ActiveProjectService {
   }
 
   deleteProject() {
-    this.backend.deleteProject(this.activeProjectID).subscribe((val: any) => {
+    this.backend.deleteProject().subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'DELETE_PROJECT',
@@ -165,7 +165,7 @@ export class ActiveProjectService {
 
   /*******************FEATURES **************************************/
   acceptFeature(id, status) {
-    this.backend.acceptFeature(id, status, this.activeProjectID).subscribe((val: any) => {
+    this.backend.acceptFeature(id, status).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'CHANGE_ACCEPTANCE_FEATURE',
@@ -180,7 +180,7 @@ export class ActiveProjectService {
   }
 
   markCompleteFeature(id, status) {
-    this.backend.markFeature(id, status, this.activeProjectID).subscribe((val: any) => {
+    this.backend.markFeature(id, status).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'CHANGE_COMPLETE_FEATURE',
@@ -196,7 +196,7 @@ export class ActiveProjectService {
   }
 
   addFeature(description: string, dueDate: Date) {
-    this.backend.addFeature(description, dueDate, this.activeProjectID).subscribe((val: any) => {
+    this.backend.addFeature(description, dueDate).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'ADD_FEATURE',
@@ -216,7 +216,7 @@ export class ActiveProjectService {
   }
 
   removeFeature(id) {
-    this.backend.deleteFeature(id, this.activeProjectID).subscribe((val: any) => {
+    this.backend.deleteFeature(id).subscribe((val: any) => {
       if (val.code == 200) {
         let temp = [];
         this._store.dispatch({
@@ -235,17 +235,22 @@ export class ActiveProjectService {
   /****************FETCHING ALL DETAILS *********************/
   fetchProjectDashboard() {
     if (this.activeProjectID == undefined || this.activeProjectID == null) return;
-    this.backend.fetchProjectDashboard(this.activeProjectID).subscribe((val: any) => {
+    this.backend.fetchProjectDashboard().subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
-          type: 'SET_PROJECT_OVERVIEW',
+          type: 'SET_ACTIVE_PROJECT_OVERVIEW',
           payload: {
-            access: val.access,
-            name: val.name,
             features: val.features,
             issues: val.issues,
             links: val.links,
             users: val.users,
+          }
+        });
+        this._store.dispatch({
+          type: 'SET_ACTIVE_PROJECT_DETAILS',
+          payload: {
+            access: val.access,
+            name: val.name,
             closed: val.closed
           }
         });

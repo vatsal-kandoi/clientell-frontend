@@ -54,210 +54,173 @@ export const INITIAL_DATA_STATE: DataState = {
   }
 };
 
-export const INITIAL_APPLICATION_STATE: ApplicationState = {
-  activeState: INITIAL_UI_STATE,
-  storeData: INITIAL_DATA_STATE,
-};
-export interface ApplicationState {
-  activeState: UiState,
-  storeData: DataState
+export const UserStateData = (state = INITIAL_UI_STATE, action) => {
+  switch (action.type) {
+  /*************************USER***********************/
+  case 'SET_USER':
+    return {
+      ...state, user: action.payload,
+    }
+  case 'SET_ACTIVE_PROJECT':
+    return {
+      ...state, activeProjectId: action.payload.id
+    }
+  /*************************PROJECTS OVERVIEW***********************/
+  case 'SET_ACTIVE_PROJECT_DETAILS':
+    return {
+      ...state,
+      activeProjectState: {
+        name: action.payload.name,
+        access: action.payload.access,
+        closed: {
+          admin: {
+            value: action.payload.closed.admin.value,
+            by: action.payload.closed.admin.by
+          },
+          client: {
+            value: action.payload.closed.client.value,
+            by: action.payload.closed.client.by
+          }
+        }        
+      }
+    }
+  case 'CLOSE_PROJECT_ADMIN':
+    return { ...state,
+      activeProjectState: {
+        closed: {
+          ... state.activeProjectState.closed,
+          admin: {
+            value: true,
+            by: state.user
+          },
+        }        
+      }
+    } 
+  case 'CLOSE_PROJECT_CLIENT':
+    return { ...state,
+      activeProjectState: {
+        closed: {
+          ... state.activeProjectState.closed,
+          client: {
+            value: true,
+            by: state.user
+          },
+        }        
+      }
+    }
+  
+  /*************************COMMENTS***********************/
+  case 'SET_COMMENT':
+    return { ...state,
+      activeComponentId: action.payload.componentId,
+      activeComponentType: action.payload.type,    
+    }
+  /** Reset all data */
+  case 'RESET_USER_DATA':
+    return INITIAL_UI_STATE;
+  default:
+    return state;
+
+  }
 }
 
-export const UserData = (state = INITIAL_APPLICATION_STATE, action) => {
+export const UserDataStore = (state = INITIAL_DATA_STATE, action) => {
   switch (action.type) {
-    /*************************USER***********************/
-    case 'SET_USER':
-      return {
-        activeState: {...state.activeState, user: action.payload},
-        storeData: {...state.storeData}
-      }
     /*************************ALL PROJECTS***********************/    
     case 'SET_ALL_PROJECTS':
       return {
-        activeState: {...state.activeState, user: action.payload.user},
-        storeData: {...state.storeData, allProjects: action.payload.projects}
-      }
+        ...state, allProjects: action.payload.projects
+      };
     case 'ADD_PROJECT':
       return {
-        activeState: {...state.activeState, activeProjectId: action.payload.id},
-        storeData: {...state.storeData, allProjects: [state.storeData.allProjects, {
+          ...state,
+          allProjects: [...state.allProjects, {
           name: action.payload.name,
           closed: {
             admin: {value: false, by: null},
             client: {value: false, by: null},
           },
           _id: action.payload.id
-        }]}
+        }]
       }
     case 'DELETE_PROJECT':
       return {
-        activeState: {...state.activeState, activeProjectId: null},
-        storeData: {...state.storeData,
-          allProjects: state.storeData.allProjects.filter(project => project._id != state.activeState.activeProjectId)
-        }
+        ...state,
+        allProjects: state.allProjects.filter(project => project._id != action.payload)
       }
-    case 'SET_ACTIVE_PROJECT':
-      return {
-        activeState: {
-          ...state.activeState, activeProjectId: action.payload
-        },
-        storeData: {...state.storeData }
-      }
-    /*************************PROJECTS OVERVIEW***********************/    
-    case 'SET_PROJECT_OVERVIEW':
-      return {
-        activeState: {
-          ...state.activeState,
-          activeProjectState: {
-            name: action.payload.name,
-            access: action.payload.access,
-            closed: {
-              admin: {
-                value: action.payload.closed.admin.value,
-                by: action.payload.closed.admin.by
-              },
-              client: {
-                value: action.payload.closed.client.value,
-                by: action.payload.closed.client.by
-              }
-            }        
-          }
-        },
-        storeData: {...state.storeData,
+   /*************************PROJECTS OVERVIEW***********************/    
+    case 'SET_ACTIVE_PROJECT_OVERVIEW':
+      return {...state,
           issues: action.payload.issues,
           features: action.payload.features,
           links: action.payload.links,          
           users: action.payload.users,
-        }
-      }
-    case 'CLOSE_PROJECT_ADMIN':
-      return {
-        activeState: {
-          ...state.activeState,
-          activeProjectState: {
-            closed: {
-              ... state.activeState.activeProjectState.closed,
-              admin: {
-                value: true,
-                by: state.activeState.user
-              },
-            }        
-          }
-        },
-        storeData: {...state.storeData,}
-      }
-    case 'CLOSE_PROJECT_CLIENT':
-      return {
-        activeState: {
-          ...state.activeState, activeProjectId: action.payload._id,
-          activeProjectState: {
-            closed: {
-              ... state.activeState.activeProjectState.closed,
-              client: {
-                value: true,
-                by: state.activeState.user
-              },
-            }        
-          }
-        },
-        storeData: {...state.storeData}
       }
     /*************************COMMENTS***********************/
     case 'GET_COMMENT':
-      return {
-        activeState: { ...state.activeState },
-        storeData: {...state.storeData,                    
-          comments: action.payload.comments,
-        }
+      return { ...state,                    
+          comments: action.payload,
       }
-    case 'SET_COMMENT':
-      return {
-        activeState: { ...state.activeState, activeComponentId: action.payload.componentId,
-          activeComponentType: action.payload.type,
-        },
-        storeData: {...state.storeData }
-      }    
-
     case 'ADD_COMMENT':
-      return {
-        activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          comments: [...state.storeData.comments, {
-            by: {
-              name: state.activeState.user.name,
-              email: state.activeState.user.email,
-            },
-            createdAt: new Date(),
-            description: action.payload.comment,
-            _id: action.payload.id
-          }],
-        }
+      return {...state,                    
+        comments: [
+          ...state.comments, {
+          by: {
+            name: action.payload.name,
+            email: action.payload.email
+          },
+          createdAt: new Date(),
+          description: action.payload.comment,
+          _id: action.payload.id
+        }],
       }
     case 'DELETE_COMMENT':
-      return {
-        activeState: { ...state.activeState},
-        storeData: {
-          ...state.storeData,                    
-          comments: state.storeData.comments.filter(comment => comment._id != action.payload)
-        }
+      return { ...state,                    
+          comments: state.comments.filter(comment => comment._id != action.payload)
       }
     /**************************LINKS *******************/
     case 'ADD_LINK':
-      return {
-        activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          links: [...state.storeData.links, 
-            {for: action.payload.for,
-            link: action.payload.link,
-          }]
-        }
+      return {...state,                    
+        links: [...state.links, 
+          {for: action.payload.for,
+          link: action.payload.link,
+        }]
       }
     case 'REMOVE LINK':
-      return {
-        activeState: { ...state.activeState},
-        storeData: {...state.storeData,   
-          links: state.storeData.links.filter(link => link.for != action.payload)
-        }
+      return {...state,   
+        links: state.links.filter(link => link.for != action.payload)
       }
     /*************************ISSUES***********************/
     case 'ADD_ISSUE':
-      return {
-        activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          issues: [...state.storeData.issues, 
-            {
-              _id: action.payload.id,
-              accepted: {value: false, by: null},
-              closed: {value: false, by: null},
-              description: action.payload.description, 
-            }
-          ]
-        }
+      return {...state,                    
+        issues: [...state.issues, 
+          {
+            _id: action.payload.id,
+            accepted: {value: false, by: null},
+            closed: {value: false, by: null},
+            description: action.payload.description, 
+          }
+        ]
       }
     case 'REMOVE_ISSUE':
-      return {
-        activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          issues:  state.storeData.issues.filter(issue => issue._id !== action.payload)
-        }
+      return {...state,                    
+        issues:  state.issues.filter(issue => issue._id !== action.payload)
       };
+
     case 'CHANGE_ACCEPTANCE_ISSUE':
       if (action.payload.status == true)
-        return { activeState: { ...state.activeState},
-          storeData: {...state.storeData,                    
-            issues: state.storeData.issues.map((issue => {
-              if (issue._id === action.payload.id) {
-                return Object.assign({}, issue, {
-                  accepted: {value: true, by: action.payload.user}
-                });
-              }
-              return issue;
-            }))
-          }
+        return { ...state,                    
+          issues: state.issues.map((issue => {
+            if (issue._id === action.payload.id) {
+              return Object.assign({}, issue, {
+                accepted: {value: true, by: action.payload.user}
+              });
+            }
+            return issue;
+          }))
         }
-      return { activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          issues: state.storeData.issues.map((issue => {
+      return { ...state,                    
+          issues: state.issues.map((issue => {
             if (issue._id === action.payload.id) {
               return Object.assign({}, issue, {
                 accepted: {value: false, by: null}
@@ -266,134 +229,110 @@ export const UserData = (state = INITIAL_APPLICATION_STATE, action) => {
             return issue;
           }))
         }
-      }
     case 'CHANGE_COMPLETE_ISSUE':
       if (action.payload.status == true)
-        return { activeState: { ...state.activeState},
-          storeData: {...state.storeData,                    
-            issues: state.storeData.issues.map((issue => {
-              if (issue._id === action.payload.id) {
-                return Object.assign({}, issue, {
-                  closed: {value: true, by: action.payload.user}
-                });
-              }
-              return issue;
-            }))
-          }
-        }
-      return { activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          issues: state.storeData.issues.map((issue => {
+        return { ...state,        
+          issues: state.issues.map((issue => {
             if (issue._id === action.payload.id) {
               return Object.assign({}, issue, {
-                closed: {value: false, by: null}
+                closed: {value: true, by: action.payload.user}
               });
             }
             return issue;
           }))
-        }
-      }
+        };
+      return { ...state,        
+        issues: state.issues.map((issue => {
+          if (issue._id === action.payload.id) {
+            return Object.assign({}, issue, {
+              closed: {value: false, by: null}
+            });
+          }
+          return issue;
+        }))
+      };
     /**************************FEATURES *******************/
     case 'ADD_FEATURE':
-      return {
-        activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          features: [...state.storeData.features, 
-            {
-              _id: action.payload.id,
-              accepted: {value: false, by: null},
-              completed: {value: false, by: null},
-              deadline: new Date(action.payload.dueDate),
-              description: action.payload.description, 
-            }
-          ]
-        }
+      return { ...state,                    
+        features: [...state.features, 
+          {
+            _id: action.payload.id,
+            accepted: {value: false, by: null},
+            completed: {value: false, by: null},
+            deadline: new Date(action.payload.dueDate),
+            description: action.payload.description, 
+          }
+        ]
       }
     case 'REMOVE_FEATURE':
-      return {
-        activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          features:  state.storeData.features.filter(feature => feature._id !== action.payload)
-        }
+      return {...state,                    
+        features:  state.features.filter(feature => feature._id !== action.payload)
       };
     case 'CHANGE_ACCEPTANCE_FEATURE':
       if (action.payload.status == true)
-        return { activeState: { ...state.activeState},
-          storeData: {...state.storeData,                    
-            features: state.storeData.features.map((feature => {
-              if (feature._id === action.payload.id) {
-                return Object.assign({}, feature, {
-                  accepted: {value: true, by: action.payload.user}
-                });
-              }
-              return feature;
-            }))
-          }
-        }
-      return { activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          features: state.storeData.features.map((feature => {
+        return { ...state,                    
+          features: state.features.map((feature => {
             if (feature._id === action.payload.id) {
               return Object.assign({}, feature, {
-                accepted: {value: false, by: null}
+                accepted: {value: true, by: action.payload.user}
               });
             }
             return feature;
           }))
         }
+      return { ...state,                    
+        features: state.features.map((feature => {
+          if (feature._id === action.payload.id) {
+            return Object.assign({}, feature, {
+              accepted: {value: false, by: null}
+            });
+          }
+          return feature;
+        }))
       }
     case 'CHANGE_COMPLETE_FEATURE':
       if (action.payload.status == true)
-        return { activeState: { ...state.activeState},
-          storeData: {...state.storeData,                    
-            features: state.storeData.features.map((feature => {
-              if (feature._id === action.payload.id) {
-                return Object.assign({}, feature, {
-                  completed: {value: true, by: state.activeState.user}
-                });
-              }
-              return feature;
-            }))
-          }
-        }
-      return { activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          features: state.storeData.features.map((feature => {
+        return { ...state,                    
+          features: state.features.map((feature => {
             if (feature._id === action.payload.id) {
               return Object.assign({}, feature, {
-                completed: {value: false, by: null}
+                completed: {value: true, by: action.payload.user}
               });
             }
             return feature;
           }))
         }
+      return { ...state,                    
+        features: state.features.map((feature => {
+          if (feature._id === action.payload.id) {
+            return Object.assign({}, feature, {
+              completed: {value: false, by: null}
+            });
+          }
+          return feature;
+        }))
       }
+
     /**************************USERS *******************/
     case 'ADD_USER':
-      return {
-        activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          users: [...state.storeData.users, 
-            { access: action.payload.role, 
-              user: {
-                name: action.payload.name, 
-                email: action.payload.email,
-                _id: action.payload.id
-              }
+      return {...state,                    
+        users: [...state.users, 
+          { access: action.payload.role, 
+            user: {
+              name: action.payload.name, 
+              email: action.payload.email,
+              _id: action.payload.id
             }
-          ],
-        }
+          }
+        ],
       }
     case 'REMOVE_USER':
-      return {
-        activeState: { ...state.activeState},
-        storeData: {...state.storeData,                    
-          users:  state.storeData.users.filter(user => user.user.email !== action.payload)
-        }
+      return {...state,                    
+        users:  state.users.filter(user => user.user.email !== action.payload)
       };
     /** Reset all data */
-    case 'RESET_DATA':
-      return INITIAL_APPLICATION_STATE;
+    case 'RESET_STORE_DATA':
+      return INITIAL_DATA_STATE;
     default:
       return state;
   }

@@ -18,12 +18,15 @@ export class ProjectDetailsComponent implements OnInit {
 
   constructor(private activeProject: ActiveProjectService, private commentService: CommentService,
     private router: Router, private _store: Store<any>) {
-      this._store.select('UserData').subscribe(data => {
-        this.links = data.storeData.links;
-        this.features = data.storeData.features;
-        this.issues = data.storeData.issues;        
-        this.access =  data.activeState.activeProjectState.access;
-        this.closed = data.activeState.activeProjectState.closed;
+      this._store.select('UserDataStore').subscribe(data => {
+        this.links = data.links;
+        this.features = data.features;
+        this.issues = data.issues; 
+      });
+  
+      this._store.select('UserStateData').subscribe(data => {        
+        this.access =  data.activeProjectState.access;
+        this.closed = data.activeProjectState.closed;
       });
     this.activeProject.fetchProjectDashboard();
   }
@@ -38,13 +41,7 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   comment(type, id) {
-    if (type == 'feature') {
-      this.commentService.setActive(type, id);
-      this.router.navigate(['/dashboard/project/comments'], {queryParams: {projectId: this.activeProject.activeProjectID, featureId: id}})
-    } else if(type == 'issue') {
-      this.commentService.setActive(type, id);
-      this.router.navigate(['/dashboard/project/comments'], {queryParams: {projectId: this.activeProject.activeProjectID, issueId: id}})
-    }
+    this.commentService.setActive(type, id);
   }
 
   acceptIssue(id) {

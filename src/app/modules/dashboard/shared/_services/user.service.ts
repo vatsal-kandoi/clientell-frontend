@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { Subject } from 'rxjs';
-import { ActiveProjectService } from './active-project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DashboardBackendService } from './backend.service';
 import { Store } from '@ngrx/store';
@@ -13,12 +11,12 @@ import { Store } from '@ngrx/store';
 export class UserService {
   userSearchCompleted: Subject<boolean>;
   searchResults: any[];
-  constructor(private backend: DashboardBackendService, private activeProject: ActiveProjectService, private snackBar: MatSnackBar, private _store: Store<any>) {
+  constructor(private backend: DashboardBackendService, private snackBar: MatSnackBar, private _store: Store<any>) {
     this.userSearchCompleted = new Subject();
   }
 
   deleteUser(email) {
-    this.backend.deleteUser(email, this.activeProject.activeProjectID).subscribe((val: any) => {
+    this.backend.deleteUser(email).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'REMOVE_USER',
@@ -34,7 +32,7 @@ export class UserService {
   }
 
   addUserToProject(role, name ,email) {
-    this.backend.addUser(role, email, name, this.activeProject.activeProjectID).subscribe((val: any) => {
+    this.backend.addUser(role, email, name).subscribe((val: any) => {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'ADD_USER',

@@ -17,9 +17,9 @@ export class AllProjectsComponent implements OnInit {
   projects: any[];
   isLoaded: boolean;
   constructor(private projectsService: ProjectsService, private router: Router, private bottomSheet: MatBottomSheet ,private displaySize: DisplaySizeService, private dialog: MatDialog, private _store: Store<any>) {
-    this._store.select('UserData').subscribe(data => {
-        this.projects = data.storeData.allProjects;
-        this.isLoaded = true;
+    this._store.select('UserDataStore').subscribe(data => {
+      this.projects = data.allProjects;
+      this.isLoaded = true;
     });
     this.isLoaded = false;
   }

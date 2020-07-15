@@ -22,9 +22,11 @@ export class NavbarComponent implements OnInit {
   
   showProject = false;
   constructor(private projectsService: ProjectsService, private bottomSheet: MatBottomSheet, private router: Router, private displaySize: DisplaySizeService, private dialog: MatDialog, private _store: Store<any>) {
-    this._store.select('UserData').subscribe(data => {
-      this.projects = data.storeData.allProjects;
-      this.name = data.activeState.user.name;
+    this._store.select('UserStateData').subscribe(data => {
+      this.name = data.user.name;
+    });
+    this._store.select('UserDataStore').subscribe(data => {
+      this.projects = data.allProjects;
       this.projectsToShow = JSON.parse(JSON.stringify(this.projects)).splice(0,5);
       this.showProject = true;
     });
@@ -58,7 +60,7 @@ export class NavbarComponent implements OnInit {
   openProject(id: string) {
     this._store.dispatch({
       type: 'SET_ACTIVE_PROJECT',
-      payload: id,
+      payload: {id},
     });
     this.router.navigate(['/dashboard/project'], {queryParams: {projectId: id}});
   }
