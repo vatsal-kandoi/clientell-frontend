@@ -1,4 +1,4 @@
-<div class="container column center">
+<div class="container column center" *ngIf="name != undefined">
     <div class="navbar">
         <div class="hello-text">Hello {{name}}</div>
         <p>Continue with tracking the progress of your projects efficiently</p>
@@ -13,7 +13,7 @@
                 </ng-container>
                 <ng-container *ngIf="projects.length > 5">
                     <ng-container *ngFor="let project of projectsToShow">
-                        <project-navbar (click)="openProject(project._id)" class="project column" [active]="project.closed.admin.value" [name]="project.name" [letter]="project.letter"></project-navbar>
+                        <project-navbar (click)="openProject(project._id)" class="project column" [active]="project.closed.admin.value" [name]="project.name" [letter]="project.name[0]"></project-navbar>
                     </ng-container>
                     <project-navbar (click)="viewAll()" class="project column" [name]="'View more'" [letter]="projects.length - projectsToShow.length"></project-navbar>
                 </ng-container>

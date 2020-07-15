@@ -9,11 +9,11 @@
             <div>
                 {{ project.name }}
             </div>
-            <div class="status" [ngClass]="{'active': project.active, 'inactive':!project.active}">
-                <ng-container *ngIf="project.active">
+            <div class="status" [ngClass]="{'active': !project.closed.admin.value, 'inactive':project.closed.admin.value}">
+                <ng-container *ngIf="!project.closed.admin.value">
                     Active
                 </ng-container>
-                <ng-container *ngIf="!project.active">
+                <ng-container *ngIf="project.closed.admin.value">
                     Inactive
                 </ng-container>
             </div>

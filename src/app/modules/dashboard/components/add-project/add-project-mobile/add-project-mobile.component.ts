@@ -11,7 +11,7 @@ import { FormControl } from '@angular/forms';
 export class AddProjectMobileComponent implements OnInit {
   error: string;
   value: FormControl;
-  constructor(private bottomSheetRef: MatBottomSheetRef<AddProjectMobileComponent>, private projectsService: ProjectsService) {
+  constructor(private bottomSheetRef: MatBottomSheetRef<AddProjectMobileComponent>) {
     this.value = new FormControl('');
   }
 
@@ -23,8 +23,7 @@ export class AddProjectMobileComponent implements OnInit {
       this.error = 'Project name cannot be empty'
       return;
     }
-    this.projectsService.addProject(this.value.value);
-    this.bottomSheetRef.dismiss();
+    this.bottomSheetRef.dismiss(this.value.value);
   }
 
 }

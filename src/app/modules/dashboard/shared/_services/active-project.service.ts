@@ -151,8 +151,8 @@ export class ActiveProjectService {
       if (val.code == 200) {
         this._store.dispatch({
           type: 'DELETE_PROJECT',
-          payload: {}
-        })
+          payload: this.activeProjectID
+        });
         this.router.navigate(['/dashboard/projects']);
       } else {
         let snackBarRef = this.snackBar.open("Error deleting the project", "Try again");

@@ -12,7 +12,7 @@ export class ConfirmMobileComponent implements OnInit {
   @Input('type') type;
   @Input('access') access;
 
-  constructor(private bottomSheetRef: MatBottomSheetRef<ConfirmMobileComponent>, private projectsService: ProjectsService, private activeProject: ActiveProjectService) {  
+  constructor(private bottomSheetRef: MatBottomSheetRef<ConfirmMobileComponent>) {  
   }
   ngOnInit(): void {
   }

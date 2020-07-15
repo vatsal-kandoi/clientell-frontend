@@ -17,11 +17,12 @@ export class AllProjectsComponent implements OnInit {
   projects: any[];
   isLoaded: boolean;
   constructor(private projectsService: ProjectsService, private router: Router, private bottomSheet: MatBottomSheet ,private displaySize: DisplaySizeService, private dialog: MatDialog, private _store: Store<any>) {
+    this.isLoaded = false;
     this._store.select('UserDataStore').subscribe(data => {
       this.projects = data.allProjects;
       this.isLoaded = true;
     });
-    this.isLoaded = false;
+
   }
 
   ngOnInit(): void {
@@ -35,11 +36,25 @@ export class AllProjectsComponent implements OnInit {
   }
   addProject() {
     if (this.displaySize.displayType == 'desktop') {
-      this.dialog.open(AddProjectDesktopComponent, {
+      let ref = this.dialog.open(AddProjectDesktopComponent, {
         width: '350px'
-      });      
+      }); 
+      ref.afterClosed().subscribe(
+        data => {
+          if (data) {
+            this.projectsService.addProject(data);
+          }
+        }
+      );     
     } else {
-      this.bottomSheet.open(AddProjectMobileComponent);
+      let ref = this.bottomSheet.open(AddProjectMobileComponent);
+      ref.afterDismissed().subscribe(
+        data => {
+          if (data) {
+            this.projectsService.addProject(data);
+          }
+        }
+      );      
     }
   }
 }

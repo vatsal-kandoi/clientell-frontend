@@ -49,11 +49,25 @@ export class NavbarComponent implements OnInit {
 
   addProject() {
     if (this.displaySize.displayType == 'desktop') {
-      this.dialog.open(AddProjectDesktopComponent, {
+      let ref = this.dialog.open(AddProjectDesktopComponent, {
         width: '350px'
-      });      
+      }); 
+      ref.afterClosed().subscribe(
+        data => {
+          if (data) {
+            this.projectsService.addProject(data);
+          }
+        }
+      );     
     } else {
-      this.bottomSheet.open(AddProjectMobileComponent);
+      let ref = this.bottomSheet.open(AddProjectMobileComponent);
+      ref.afterDismissed().subscribe(
+        data => {
+          if (data) {
+            this.projectsService.addProject(data);
+          }
+        }
+      );      
     }
   }
 

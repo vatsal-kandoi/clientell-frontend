@@ -11,7 +11,7 @@ import { FormControl } from '@angular/forms';
 export class AddProjectDesktopComponent implements OnInit {
   value: FormControl;
   error: string;
-  constructor(public dialogRef: MatDialogRef<AddProjectDesktopComponent>, private projectsService: ProjectsService) {
+  constructor(public dialogRef: MatDialogRef<AddProjectDesktopComponent>) {
     this.value = new FormControl('');
   }
 
@@ -23,8 +23,7 @@ export class AddProjectDesktopComponent implements OnInit {
       this.error = 'Project name cannot be empty'
       return;
     }
-    this.projectsService.addProject(this.value.value);
-    this.dialogRef.close();
+    this.dialogRef.close(this.value.value);
   }
 
 }

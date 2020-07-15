@@ -21,7 +21,6 @@ export class CommentsComponent implements OnInit {
   accepted: string;
   type: string;
   closed: boolean;
-  isLoaded: boolean;
   constructor(private commentService: CommentService, private route: ActivatedRoute, private _store: Store<any>) {
     this._store.select('UserStateData').subscribe(data => {
       this.type = data.activeState.activeComponentType;
@@ -32,11 +31,9 @@ export class CommentsComponent implements OnInit {
       this.addedOn = data.commentDescription.addedOn;
       this.completed = data.commentDescription.completed;
       this.closed = data.commentDescription.closed;
-      this.isLoaded = true;
       this.comments = data.comments;
     });
     this.commentService.getComments();
-    this.isLoaded = false;
     this.userComment = new FormControl('');
   }
   ngOnInit(): void {

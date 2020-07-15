@@ -17,7 +17,6 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./project-overview.component.css']
 })
 export class ProjectOverviewComponent implements OnInit {
-  loadingContent: boolean;
 
   name: string;
   access: string;
@@ -26,10 +25,8 @@ export class ProjectOverviewComponent implements OnInit {
 
   usersToShow: any[];
   errorGettingParam: any;
-  showReload: boolean;
   constructor(private router: Router, private projectsService: ProjectsService,
     private bottomSheet: MatBottomSheet, private displaySize: DisplaySizeService, private dialog: MatDialog, private activeProject: ActiveProjectService, private route: ActivatedRoute, private _store: Store<any>) {
-      this.loadingContent = true;
       this._store.select('UserDataStore').subscribe(data => {
         this.users = data.users;
         this.usersToShow = JSON.parse(JSON.stringify(this.users)).splice(0,2)
@@ -39,16 +36,9 @@ export class ProjectOverviewComponent implements OnInit {
         this.access =  data.activeProjectState.access;
         this.closed = data.activeProjectState.closed;
         this.name = data.activeProjectState.name;
-        this.loadingContent = false;
       });
 
       this.errorGettingParam = false;
-      this.showReload = false;
-      if (this.activeProject.activeProjectID == undefined) {
-        const projectId: string = this.route.snapshot.queryParamMap.get('projectId');
-        this.activeProject.activeProjectID = projectId;
-        this.activeProject.fetchProjectDashboard();
-      }
   }
 
   ngOnInit(): void {
@@ -62,13 +52,33 @@ export class ProjectOverviewComponent implements OnInit {
     }
   }
 
-  addLink() {
+  addItem() {
     if (this.displaySize.displayType == 'desktop') {
-      this.dialog.open(AddItemDesktopComponent, {
-        width: '350px'
-      });      
+      const dialogConfig = new MatDialogConfig()
+      dialogConfig.width = '350px';
+      dialogConfig.data = {access: this.access};
+      dialogConfig.autoFocus = false;
+      let ref = this.dialog.open(AddItemDesktopComponent, dialogConfig);      
+      ref.afterClosed().subscribe((data) => {
+        if (data) {
+          if (data.type == 'link') this.activeProject.addLink(data.for, data.link);
+          else if (data.type == 'issue') this.activeProject.addIssue(data.description);
+          else if (data.type == 'feature') this.activeProject.addFeature(data.description, data.dueDate)
+        }
+      })
     } else {
-      this.bottomSheet.open(AddItemMobileComponent);
+      const config = new MatBottomSheetConfig();
+      config.data = {access: this.access};
+      config.autoFocus = false;
+      let ref = this.bottomSheet.open(AddItemMobileComponent, config);
+      ref.afterDismissed().subscribe((data) => {
+        if (data) {
+          if (data.type == 'link') this.activeProject.addLink(data.for, data.link);
+          else if (data.type == 'issue') this.activeProject.addIssue(data.description);
+          else if (data.type == 'feature') this.activeProject.addFeature(data.description, data.dueDate)
+        }
+      })
+
     }
   }
   closeProject() {

@@ -15,9 +15,8 @@ export class UsersComponent implements OnInit {
   access: string;
 
   userQuery: FormControl;
-  constructor(private activeProject: ActiveProjectService, private userService: UserService, private _store: Store<any>) {
+  constructor(private userService: UserService, private _store: Store<any>) {
     this._store.select('UserDataStore').subscribe(data => {
-      console.log(data);
       this.users = data.users;
     });
 

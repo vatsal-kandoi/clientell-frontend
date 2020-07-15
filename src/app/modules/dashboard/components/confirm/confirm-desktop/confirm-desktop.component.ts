@@ -12,7 +12,7 @@ export class ConfirmDesktopComponent implements OnInit {
   type: any;
   access: any;
 
-  constructor(public dialogRef: MatDialogRef<ConfirmDesktopComponent>, @Inject(MAT_DIALOG_DATA) data, private projectsService: ProjectsService, private activeProject: ActiveProjectService) {
+  constructor(public dialogRef: MatDialogRef<ConfirmDesktopComponent>, @Inject(MAT_DIALOG_DATA) data) {
     this.type = data.type;
     this.access = data.access;
   }
