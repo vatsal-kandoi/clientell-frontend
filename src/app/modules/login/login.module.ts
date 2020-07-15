@@ -11,6 +11,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import {MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBar} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [SignInComponent, SignUpComponent, ForgotPasswordComponent, ResetPasswordComponent],
@@ -21,7 +22,11 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
     MatProgressSpinnerModule,
     FormsModule,   
     MatInputModule,
+    MatSnackBarModule,
     MatButtonModule,
+  ],
+  providers: [
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 3000}}
   ]
 })
 export class LoginModule { }

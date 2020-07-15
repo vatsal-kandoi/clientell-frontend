@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { LoginService } from '../../_services/login.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
@@ -12,10 +13,11 @@ export class ResetPasswordComponent implements OnInit {
   password2: FormControl;
   fetchedResponse: boolean;
   error: string;
-
-  constructor(private auth: LoginService) {
+  token: string;
+  constructor(private auth: LoginService, private route: ActivatedRoute) {
     this.password = new FormControl('');
     this.password2 = new FormControl('');
+    this.token = this.route.snapshot.queryParamMap.get('token');
     this.fetchedResponse = true;
   }
 
@@ -31,7 +33,7 @@ export class ResetPasswordComponent implements OnInit {
       }
     })  }
   reset() {
-
+    this.auth.resetPassword(this.token,this.password.value)
   }
 
 }

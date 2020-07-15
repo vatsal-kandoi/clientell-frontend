@@ -25,11 +25,11 @@ export class AuthBackendService {
         return this.http.post(this.url.logoutUrl, {}).toPromise();
     }
 
-    forgotPassword() {
-
+    forgotPassword(email) {
+        return this.http.post(this.url.forgotPasswordUrl, {'email': email});
     }
 
-    resetPassword() {
-        
+    resetPassword(token, password) {
+        return this.http.post(this.url.resetPasswordUrl, {'token': token, 'password': password})       
     }
 }

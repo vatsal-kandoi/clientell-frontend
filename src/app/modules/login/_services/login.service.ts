@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import {AuthBackendService} from './backend.service';
 import {TokenService} from './token.service';
 import {AuthFetchedResponse} from '../../../shared/_interfaces/auth-response.interface';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +12,7 @@ export class LoginService {
   error: Subject<string>;
   completedAuthRequest: Subject<boolean>;
   
-  constructor(private backend: AuthBackendService, private router: Router, private token: TokenService) {
+  constructor(private backend: AuthBackendService, private router: Router, private token: TokenService, private snackBar: MatSnackBar) {
     this.error = new Subject();
     this.completedAuthRequest = new Subject();
   }
@@ -52,7 +53,28 @@ export class LoginService {
       }
     });
   }
-
+  forgotPassword(email: string) {
+    this.backend.forgotPassword(email).subscribe((data: any) =>{ 
+      if (data.success == true) {
+        this.completedAuthRequest.next(true);
+        let snackBarRef = this.snackBar.open("Email with recovery link sent");
+      } else {
+        this.error = data.message;
+        this.completedAuthRequest.next(true);
+      }
+    })
+  }
+  resetPassword(token, email) {
+    this.backend.resetPassword(token, email).subscribe((data: any) =>{ 
+      if (data.success == true) {
+        this.completedAuthRequest.next(true);
+        let snackBarRef = this.snackBar.open("Password was successfully changed. Please login.");
+      } else {
+        this.error = data.message;
+        this.completedAuthRequest.next(true);
+      }
+    })
+  }
   async logout() {
     await this.backend.logout();
     this.token.deleteTokens();
