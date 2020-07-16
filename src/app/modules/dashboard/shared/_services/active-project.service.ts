@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
-import {ProjectsService} from './projects.service';
-import { Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { UrlService } from 'src/app/shared/_services/url.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {DashboardBackendService} from './backend.service';
+import { DashboardBackendService } from './backend.service';
 import { Store } from '@ngrx/store';
 
 @Injectable({
@@ -13,6 +9,8 @@ import { Store } from '@ngrx/store';
 })
 export class ActiveProjectService {
   activeProjectID: string;
+  name: string;
+  email: string;
   access: string;
   constructor(private backend: DashboardBackendService,  private router: Router, private snackBar: MatSnackBar, private _store: Store<any>) {
     this._store.select('UserStateData').subscribe(data => {
@@ -21,6 +19,8 @@ export class ActiveProjectService {
         this.fetchProjectDashboard();
         this.access = data.activeProjectState.access;
       }       
+      this.name = data.user.name;
+      this.email = data.user.email;
     });
   }
 
@@ -102,7 +102,7 @@ export class ActiveProjectService {
         this._store.dispatch({
           type: 'CHANGE_ACCEPTANCE_ISSUE',
           payload: {
-            status, id
+            status, id, user: {name: this.name, email: this.email}
           }
         })
       }
@@ -115,7 +115,7 @@ export class ActiveProjectService {
         this._store.dispatch({
           type: 'CHANGE_COMPLETE_ISSUE',
           payload: {
-            id, status
+            id, status, user: {name: this.name, email: this.email}
           }
         })
       }
@@ -170,7 +170,7 @@ export class ActiveProjectService {
         this._store.dispatch({
           type: 'CHANGE_ACCEPTANCE_FEATURE',
           payload: {
-            id, status
+            id, status, user: {name: this.name, email: this.email}
           }
         });
       } else {
@@ -187,6 +187,7 @@ export class ActiveProjectService {
           payload: {
             id,
             status,
+            user: {name: this.name, email: this.email}
           }
         })
        } else {
@@ -218,7 +219,6 @@ export class ActiveProjectService {
   removeFeature(id) {
     this.backend.deleteFeature(id).subscribe((val: any) => {
       if (val.code == 200) {
-        let temp = [];
         this._store.dispatch({
           type: 'REMOVE_FEATURE',
           payload: id

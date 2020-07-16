@@ -22,16 +22,18 @@ export class CommentsComponent implements OnInit {
   type: string;
   closed: boolean;
   constructor(private commentService: CommentService, private route: ActivatedRoute, private _store: Store<any>) {
-    this._store.select('UserStateData').subscribe(data => {
-      this.type = data.activeState.activeComponentType;
-    });
     this._store.select('UserDataStore').subscribe(data => {
       this.description = data.commentDescription.description;
-      this.accepted = data.commentDescription.accepted;
       this.addedOn = data.commentDescription.addedOn;
-      this.completed = data.commentDescription.completed;
-      this.closed = data.commentDescription.closed;
+      this.type = data.commentDescription.type;
+      this.accepted = data.commentDescription.accepted;
       this.comments = data.comments;
+      if (this.type == 'feature') {
+        this.completed = data.commentDescription.completed;
+      } else {
+        this.closed = data.commentDescription.closed;
+      }
+      console.log(data);
     });
     this.commentService.getComments();
     this.userComment = new FormControl('');

@@ -1,6 +1,6 @@
 <div class="container column center" *ngIf="name != undefined">
     <div class="navbar">
-        <div class="hello-text">Hello {{name}}</div>
+        <div class="hello-text">Hello {{name.split(" ")[0]}}</div>
         <p>Continue with tracking the progress of your projects efficiently</p>
         <input placeholder="Project name" (keyup)="filter()" [formControl]="projectName">
         <div class="projects">

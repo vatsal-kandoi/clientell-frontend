@@ -12,6 +12,7 @@ import { TokenService } from './modules/login/_services/token.service';
 import { StoreModule } from '@ngrx/store';
 import { AccessToken } from './modules/login/redux/access-token.reducer';
 import {UserStateData, UserDataStore} from './modules/dashboard/shared/redux/projects.reducer';
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import {UserStateData, UserDataStore} from './modules/dashboard/shared/redux/pro
     BrowserAnimationsModule,
     BrowserModule,
     HttpClientModule,
+    MatSnackBarModule,
     StoreModule.forRoot({ AccessToken, UserStateData, UserDataStore })    
   ],
   providers: [
@@ -32,7 +34,8 @@ import {UserStateData, UserDataStore} from './modules/dashboard/shared/redux/pro
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
-    }
+    },
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 3000}}
   ],
   bootstrap: [AppComponent],
 })

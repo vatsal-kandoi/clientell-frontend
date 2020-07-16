@@ -43,32 +43,22 @@
         </div>
     </div>
     <div class="margin">
-        Added on {{addedOn | date}}
+        Added on {{addedOn}}
     </div>
     <div class="padding">
         <li *ngIf="comments.length == 0">
             No comments on this agenda
         </li>
         <li *ngFor="let comment of comments">
-            <div class="comment">
-                <span class="icon" *ngIf="userEmail == comment.by.email">
-                        <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
-                    <mat-menu #menu="matMenu">
-                        <button (click)="deleteComment(comment._id)" mat-menu-item>Delete</button>
-                    </mat-menu> 
-                </span>
+            <div class="comment column">
                 <div>
-                    <p>
+                        <span class="name">
+                            {{comment.by.name}}
+                        </span>
                         {{comment.description}}
-                    </p>
                 </div>
-                <div class="row align-space-between">
-                    <div>
-                        {{comment.by.name}}
-                    </div>
-                    <div>
-                        {{comment.createdAt | date}}
-                    </div>
+                <div class="time">
+                    {{comment.createdAt | date}}
                 </div>
             </div>
         </li>

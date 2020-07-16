@@ -19,11 +19,13 @@ export class CommentService {
   activeProjectId: string;
   commentsFetched: Subject<boolean>;
   userEmail: string;
+  userName: string;
   data: any;
 
   constructor(private backend: DashboardBackendService, private snackBar: MatSnackBar, private _store: Store<any>,private router: Router) {
     this._store.select('UserStateData').subscribe((data) => {
       if (data.user.email != null && data.user.email != this.userEmail){
+        this.userName = data.user.name;
         this.userEmail = data.user.email;
       }
       if (data.activeProjectId != null && data.activeProjectId != this.activeProjectId) {
@@ -69,7 +71,7 @@ export class CommentService {
         this._store.dispatch({
           type: 'ADD_COMMENT',
           payload: {
-            comment, id: val.id
+            comment, id: val.id, name: this.userName, email: this.userEmail
           }
         })
       } else {
@@ -83,6 +85,7 @@ export class CommentService {
 
   getComments() {
     this.backend.getAllComments().subscribe((val: any) => {
+      console.log(val)
       if (val.code == 200) {
         if (this.activeType == 'feature'){
           this._store.dispatch({
@@ -94,6 +97,7 @@ export class CommentService {
                 addedOn: new Date(val.addedOn).toLocaleDateString(),
                 accepted: val.accepted.value,
                 completed: val.completed.value,
+                type: 'feature'
               }
             }
           });
@@ -105,7 +109,9 @@ export class CommentService {
               commentDescription: {
                 description: val.description,
                 addedOn: new Date(val.addedOn).toLocaleDateString(),
-                closed: val.closed.value
+                closed: val.closed.value,
+                accepted: val.accepted.value,
+                type: 'issue'
               }
             }
           });

@@ -159,7 +159,8 @@ export const UserDataStore = (state = INITIAL_DATA_STATE, action) => {
     /*************************COMMENTS***********************/
     case 'GET_COMMENT':
       return { ...state,                    
-          comments: action.payload,
+          comments: action.payload.comments,
+          commentDescription: action.payload.commentDescription
       }
     case 'ADD_COMMENT':
       return {...state,                    
